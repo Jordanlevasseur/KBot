@@ -1,0 +1,7 @@
+# Trade-history fill times
+
+Trade history now includes TIME (LOCAL), displaying the confirmed execution date, hour, minute, second, and local timezone for each BUY and SELL fill. Separate partial fills retain their own times. Existing exchange fill payloads provide created_time (preferred) or Unix-second ts (fallback); order submission, acknowledgment, market expiry, and dashboard receipt times are never substituted. Daylight-saving repeats are distinguished by the timezone abbreviation.
+
+The existing dashboard background reader retrieves timestamps from owned fills in short SQLite mode=ro/query_only transactions, independently of profit availability. Existing journal records therefore populate the column without new API requests or a schema migration. Raw read-only account fills display their existing timestamps directly. Missing or invalid timestamps show an em dash. Legacy offline simulation records have no real execution date and also show an em dash.
+
+The table retains signed profit/loss and offers horizontal scrolling on smaller windows. Generation/mode/history-key checks prevent results from another session appearing in the current view. No trading worker, order route, account scope, position sizing, protective rule, credential, firewall, or production journal changes were made. The updated display is installed for the next normal application launch; the update does not restart the current trader.

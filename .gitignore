@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+state/
+*.pem
+*.key
+.env
+.venv/
+
+# Local recovery copies and generated research archives are not source code.
+*.bak*
+research/threshold_10000_data/
+docs/*.csv
+docs/*.json
+docs/*.diff

@@ -1,0 +1,1523 @@
+{
+  "first_close": 1794517200,
+  "last_close": 1794709800,
+  "asof_saved_snapshot": 1794710386.4353514,
+  "expected_quarter_hour_closures": 215,
+  "series": {
+    "ticker": "KXBTC15M",
+    "fee_type": "quadratic",
+    "fee_multiplier": 1
+  },
+  "markets": [
+    {
+      "ticker": "KXBTC15M-26NOV121600-00",
+      "close": 1794517200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121600",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121615-15",
+      "close": 1794518100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV121615",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121630-30",
+      "close": 1794519000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV121630",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121645-45",
+      "close": 1794519900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121645",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121700-00",
+      "close": 1794520800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121700",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121715-15",
+      "close": 1794521700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121715",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121730-30",
+      "close": 1794522600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV121730",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121745-45",
+      "close": 1794523500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121745",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121800-00",
+      "close": 1794524400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121800",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121815-15",
+      "close": 1794525300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV121815",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121830-30",
+      "close": 1794526200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121830",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121845-45",
+      "close": 1794527100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121845",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121900-00",
+      "close": 1794528000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV121900",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121915-15",
+      "close": 1794528900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121915",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121930-30",
+      "close": 1794529800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121930",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV121945-45",
+      "close": 1794530700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV121945",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122000-00",
+      "close": 1794531600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV122000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122015-15",
+      "close": 1794532500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122030-30",
+      "close": 1794533400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV122030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122045-45",
+      "close": 1794534300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122100-00",
+      "close": 1794535200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV122100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122115-15",
+      "close": 1794536100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122130-30",
+      "close": 1794537000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122145-45",
+      "close": 1794537900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122200-00",
+      "close": 1794538800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV122200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122215-15",
+      "close": 1794539700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122230-30",
+      "close": 1794540600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122245-45",
+      "close": 1794541500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122300-00",
+      "close": 1794542400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122315-15",
+      "close": 1794543300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122330-30",
+      "close": 1794544200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV122330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV122345-45",
+      "close": 1794545100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV122345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130000-00",
+      "close": 1794546000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130015-15",
+      "close": 1794546900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130030-30",
+      "close": 1794547800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130045-45",
+      "close": 1794548700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130100-00",
+      "close": 1794549600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130115-15",
+      "close": 1794550500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130130-30",
+      "close": 1794551400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130145-45",
+      "close": 1794552300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130200-00",
+      "close": 1794553200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130215-15",
+      "close": 1794554100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130230-30",
+      "close": 1794555000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130245-45",
+      "close": 1794555900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130300-00",
+      "close": 1794556800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130315-15",
+      "close": 1794557700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130330-30",
+      "close": 1794558600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130345-45",
+      "close": 1794559500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130400-00",
+      "close": 1794560400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130400",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130415-15",
+      "close": 1794561300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130415",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130430-30",
+      "close": 1794562200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130430",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130445-45",
+      "close": 1794563100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130445",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130500-00",
+      "close": 1794564000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130500",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130515-15",
+      "close": 1794564900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130515",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130530-30",
+      "close": 1794565800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130530",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130545-45",
+      "close": 1794566700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130545",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130600-00",
+      "close": 1794567600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130600",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130615-15",
+      "close": 1794568500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130615",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130630-30",
+      "close": 1794569400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130630",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130645-45",
+      "close": 1794570300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130645",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130700-00",
+      "close": 1794571200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130700",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130715-15",
+      "close": 1794572100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130715",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130730-30",
+      "close": 1794573000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130730",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130745-45",
+      "close": 1794573900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130745",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130800-00",
+      "close": 1794574800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130800",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130815-15",
+      "close": 1794575700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130815",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130830-30",
+      "close": 1794576600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130830",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130845-45",
+      "close": 1794577500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130845",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130900-00",
+      "close": 1794578400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130900",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130915-15",
+      "close": 1794579300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130915",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130930-30",
+      "close": 1794580200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV130930",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV130945-45",
+      "close": 1794581100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV130945",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131000-00",
+      "close": 1794582000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131015-15",
+      "close": 1794582900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131030-30",
+      "close": 1794583800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131045-45",
+      "close": 1794584700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131100-00",
+      "close": 1794585600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131115-15",
+      "close": 1794586500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131130-30",
+      "close": 1794587400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131145-45",
+      "close": 1794588300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131200-00",
+      "close": 1794589200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131215-15",
+      "close": 1794590100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131230-30",
+      "close": 1794591000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131245-45",
+      "close": 1794591900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131300-00",
+      "close": 1794592800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131315-15",
+      "close": 1794593700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131330-30",
+      "close": 1794594600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131345-45",
+      "close": 1794595500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131400-00",
+      "close": 1794596400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131400",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131415-15",
+      "close": 1794597300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131415",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131430-30",
+      "close": 1794598200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131430",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131445-45",
+      "close": 1794599100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131445",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131500-00",
+      "close": 1794600000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131500",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131515-15",
+      "close": 1794600900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131515",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131530-30",
+      "close": 1794601800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131530",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131545-45",
+      "close": 1794602700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131545",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131600-00",
+      "close": 1794603600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131600",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131615-15",
+      "close": 1794604500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131615",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131630-30",
+      "close": 1794605400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131630",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131645-45",
+      "close": 1794606300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131645",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131700-00",
+      "close": 1794607200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131700",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131715-15",
+      "close": 1794608100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131715",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131730-30",
+      "close": 1794609000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131730",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131745-45",
+      "close": 1794609900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131745",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131800-00",
+      "close": 1794610800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131800",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131815-15",
+      "close": 1794611700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131815",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131830-30",
+      "close": 1794612600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131830",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131845-45",
+      "close": 1794613500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131845",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131900-00",
+      "close": 1794614400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131900",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131915-15",
+      "close": 1794615300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV131915",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131930-30",
+      "close": 1794616200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131930",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV131945-45",
+      "close": 1794617100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV131945",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132000-00",
+      "close": 1794618000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132015-15",
+      "close": 1794618900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132030-30",
+      "close": 1794619800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132045-45",
+      "close": 1794620700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132100-00",
+      "close": 1794621600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132115-15",
+      "close": 1794622500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132130-30",
+      "close": 1794623400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132145-45",
+      "close": 1794624300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132200-00",
+      "close": 1794625200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132215-15",
+      "close": 1794626100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132230-30",
+      "close": 1794627000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132245-45",
+      "close": 1794627900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132300-00",
+      "close": 1794628800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132315-15",
+      "close": 1794629700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV132315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132330-30",
+      "close": 1794630600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV132345-45",
+      "close": 1794631500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV132345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140000-00",
+      "close": 1794632400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140015-15",
+      "close": 1794633300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140030-30",
+      "close": 1794634200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140045-45",
+      "close": 1794635100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140100-00",
+      "close": 1794636000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140115-15",
+      "close": 1794636900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140130-30",
+      "close": 1794637800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140145-45",
+      "close": 1794638700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140200-00",
+      "close": 1794639600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140215-15",
+      "close": 1794640500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140230-30",
+      "close": 1794641400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140245-45",
+      "close": 1794642300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140300-00",
+      "close": 1794643200.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140315-15",
+      "close": 1794644100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140330-30",
+      "close": 1794645000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140345-45",
+      "close": 1794645900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140400-00",
+      "close": 1794646800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140400",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140415-15",
+      "close": 1794647700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140415",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140430-30",
+      "close": 1794648600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140430",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140445-45",
+      "close": 1794649500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140445",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140500-00",
+      "close": 1794650400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140500",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140515-15",
+      "close": 1794651300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140515",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140530-30",
+      "close": 1794652200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140530",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140545-45",
+      "close": 1794653100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140545",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140600-00",
+      "close": 1794654000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140600",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140615-15",
+      "close": 1794654900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140615",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140630-30",
+      "close": 1794655800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140630",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140645-45",
+      "close": 1794656700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140645",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140700-00",
+      "close": 1794657600.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140700",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140715-15",
+      "close": 1794658500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140715",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140730-30",
+      "close": 1794659400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140730",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140745-45",
+      "close": 1794660300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140745",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140800-00",
+      "close": 1794661200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140800",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140815-15",
+      "close": 1794662100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140815",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140830-30",
+      "close": 1794663000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140830",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140845-45",
+      "close": 1794663900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140845",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140900-00",
+      "close": 1794664800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV140900",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140915-15",
+      "close": 1794665700.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140915",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140930-30",
+      "close": 1794666600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140930",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV140945-45",
+      "close": 1794667500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV140945",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141000-00",
+      "close": 1794668400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141015-15",
+      "close": 1794669300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141030-30",
+      "close": 1794670200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141045-45",
+      "close": 1794671100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141100-00",
+      "close": 1794672000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141115-15",
+      "close": 1794672900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141130-30",
+      "close": 1794673800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141130",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141145-45",
+      "close": 1794674700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141145",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141200-00",
+      "close": 1794675600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141200",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141215-15",
+      "close": 1794676500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141215",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141230-30",
+      "close": 1794677400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141230",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141245-45",
+      "close": 1794678300.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141245",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141300-00",
+      "close": 1794679200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141300",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141315-15",
+      "close": 1794680100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141315",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141330-30",
+      "close": 1794681000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141330",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141345-45",
+      "close": 1794681900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141345",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141400-00",
+      "close": 1794682800.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141400",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141415-15",
+      "close": 1794683700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141415",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141430-30",
+      "close": 1794684600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141430",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141445-45",
+      "close": 1794685500.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141445",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141500-00",
+      "close": 1794686400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141500",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141515-15",
+      "close": 1794687300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141515",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141530-30",
+      "close": 1794688200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141530",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141545-45",
+      "close": 1794689100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141545",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141600-00",
+      "close": 1794690000.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141600",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141615-15",
+      "close": 1794690900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141615",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141630-30",
+      "close": 1794691800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141630",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141645-45",
+      "close": 1794692700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141645",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141700-00",
+      "close": 1794693600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141700",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141715-15",
+      "close": 1794694500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141715",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141730-30",
+      "close": 1794695400.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141730",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141745-45",
+      "close": 1794696300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141745",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141800-00",
+      "close": 1794697200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141800",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141815-15",
+      "close": 1794698100.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141815",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141830-30",
+      "close": 1794699000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141830",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141845-45",
+      "close": 1794699900.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141845",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141900-00",
+      "close": 1794700800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141900",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141915-15",
+      "close": 1794701700.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV141915",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141930-30",
+      "close": 1794702600.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141930",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV141945-45",
+      "close": 1794703500.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV141945",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142000-00",
+      "close": 1794704400.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV142000",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142015-15",
+      "close": 1794705300.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV142015",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142030-30",
+      "close": 1794706200.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV142030",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142045-45",
+      "close": 1794707100.0,
+      "result": "no",
+      "event_ticker": "KXBTC15M-26NOV142045",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142100-00",
+      "close": 1794708000.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV142100",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142115-15",
+      "close": 1794708900.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV142115",
+      "status": "finalized"
+    },
+    {
+      "ticker": "KXBTC15M-26NOV142130-30",
+      "close": 1794709800.0,
+      "result": "yes",
+      "event_ticker": "KXBTC15M-26NOV142130",
+      "status": "finalized"
+    }
+  ],
+  "excluded": [],
+  "account_requests": 0,
+  "application_changes": false,
+  "public_requests": 218,
+  "missing": []
+}

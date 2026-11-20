@@ -1,0 +1,24 @@
+# Review and replace all CHANGE_ME values before installing. Not enabled by default.
+[Unit]
+Description=Kalshi demo trading candidate
+After=kalshi-demo-gateway.service
+Requires=kalshi-demo-gateway.service
+[Service]
+Type=simple
+User=CHANGE_ME_LOCAL_USER
+WorkingDirectory=/opt/kalshi-bot
+Environment=KALSHI_ACCOUNT_STATE=/var/lib/kalshi-demo-trader
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/kalshi-bot/deploy/run-trading.sh /etc/kalshi-bot/credentials-demo demo --connect --trade --headless --fee-reserve CHANGE_ME_VERIFIED_DOLLARS_PER_CONTRACT
+Restart=on-failure
+RestartSec=10
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/kalshi-demo-trader
+MemoryMax=500M
+CPUQuota=20%
+[Install]
+WantedBy=multi-user.target

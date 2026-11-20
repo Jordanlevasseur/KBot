@@ -1,0 +1,31 @@
+# Optional system service template. Install application under /opt/kalshi-bot first.
+[Unit]
+Description=Offline Kalshi strategy simulation
+[Service]
+Type=oneshot
+DynamicUser=yes
+WorkingDirectory=/opt/kalshi-bot
+Environment=KALSHI_SIM_STATE=/var/lib/kalshi-simulation
+ExecStart=/opt/kalshi-bot/deploy/run-sandboxed.sh --start --steps 1800
+StateDirectory=kalshi-simulation
+UMask=0077
+PrivateNetwork=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+MemoryMax=500M
+CPUQuota=20%
+ReadWritePaths=/var/lib/kalshi-simulation
+InaccessiblePaths=/root /home /media /mnt /run/user
+[Install]
+WantedBy=multi-user.target

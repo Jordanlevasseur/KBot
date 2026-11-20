@@ -1,0 +1,11 @@
+# Sequential purchases without a per-market count cap
+
+The November 14 user instruction removes the former maximum of two purchases per Bitcoin market. This is standard behavior in simulation, demo, and live modes. The desktop and terminal display the actual completed count, without a /2 maximum. Every purchase still requires a fully flat, reconciled account with no unresolved order. A partial sale, partial entry, rejected or uncertain acknowledgment, stale data, or lack of authorization cannot permit another purchase. There are no simultaneous opposing positions.
+
+The four-minute window, permitted buy limits, prepared quantity and fee reserves, account balance scope, 86-cent stop trigger and sell limit, durable intents, and uncertain-submission protections remain unchanged. No transport endpoint, gateway policy, rate limiter, credentials, or firewall changes are required. More repeat entries can mean more turnover and repeated stop losses within the same market.
+
+Existing simulation and trading databases retain a CHECK(buys<=2) constraint. Their next normal owner startup migrates only the markets table transactionally, preserving all columns and rows, explicit indexes/triggers, counts, stops, and settlement state. The new constraint is CHECK(buys>=0). The migration is idempotent; any failure rolls back the old table and fails startup. Unexpected dependent views/foreign keys require review. Other tables are not rewritten. The running production journal was not migrated during development, and no real trades were used for testing.
+
+Validation: 354 offline tests passed, zero failed. New coverage includes eight alternating YES/NO round trips, partial-sale re-entry blocking, no duplicate intents, third and later purchases, stale account and quote refusal, pause/cutoff checks, migration rollback, and lossless restart of both journal types. The mocked demo pipeline exercises the real isolated worker and Unix gateway without Internet/account access; desktop verification includes the count display and signed loss styling. See the accompanying verification JSON for the final integration results.
+
+Installed code takes effect on the application's next normal launch; the running trader is not restarted by the update. This change does not automatically enable live trading.

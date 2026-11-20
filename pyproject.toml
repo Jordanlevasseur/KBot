@@ -1,0 +1,13 @@
+[project]
+name = "kalshi-bitcoin-bot"
+version = "0.4.0"
+description = "Transactional strategy simulator and isolated read-only Kalshi account monitor"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+kalshi-sim = "kalshi_bot.__main__:main"
+kalshi-desktop = "kalshi_bot.desktop:main"
+
+[project.optional-dependencies]
+account = ["cryptography>=41", "websockets>=10.4,<12"]
