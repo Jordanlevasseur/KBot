@@ -264,6 +264,34 @@ class PreparedTests(unittest.TestCase):
             f.clock.now+=.1;f.publish();f.execute()
             self.assertEqual(len(f.venue.cancellations),2)
         self.each(run)
+
+    def test_cancel_404_keeps_order_reserved_until_new_account_evidence(self):
+        def run(f):
+            f.qualify();f.execute();f.venue.fill(f.venue.orders[0],1);f.publish()
+            f.feed.prices['yes_bid']=D('.70')
+            with patch.object(f.venue,'cancel',side_effect=APIError(404)) as cancel:
+                f.execute();epoch=f.inputs.epoch()
+                for _ in range(30):f.execute()
+                self.assertEqual(cancel.call_count,1)
+                self.assertEqual(f.inputs.epoch(),epoch)
+                self.assertIsNotNone(f.journal.active())
+                self.assertEqual(len(f.venue.orders),1)
+        self.each(run)
+
+    def test_slow_account_reads_do_not_queue_cash_or_metadata(self):
+        from kalshi_bot.prepared import Refreshers
+        readers=Refreshers(Inputs(),lambda:None,lambda:[],lambda:None)
+        release=threading.Event()
+        started=[threading.Event() for _ in range(4)]
+        def block(event):
+            event.set();release.wait(3)
+        try:
+            for event in started:readers.pool.submit(block,event)
+            self.assertTrue(all(event.wait(1) for event in started))
+            self.assertEqual(readers.cash_pool.submit(lambda:'cash').result(timeout=1),'cash')
+            self.assertEqual(readers.meta_pool.submit(lambda:'market').result(timeout=1),'market')
+        finally:
+            release.set();readers.close()
     def test_fee_change_requires_rebuild_without_blocking_prepared_protective_exit(self):
         def run(f):
             f.inputs.set_meta('fees',((TICKER,TICKER),D('.04')),f.clock());f.qualify()

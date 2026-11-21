@@ -14,7 +14,7 @@ import time
 from types import MappingProxyType
 import uuid
 from .account import cutoff
-from .api import SchemaError,TICKER,decimal
+from .api import APIError,SchemaError,TICKER,decimal
 from .buying_power import market_scope,cash_cents
 from .execution import affordable,order_payload
 from .fees import entry_reserve
@@ -175,7 +175,11 @@ class Refreshers:
     """GET-only worker pool leaves gateway slots available for protective writes."""
     def __init__(self,inputs,client_factory,market_source,notify,fill_source=None):
         self.inputs=inputs;self.client_factory=client_factory;self.market_source=market_source;self.notify=notify;self.fill_source=fill_source
-        self.stop=threading.Event();self.pool=ThreadPoolExecutor(max_workers=3,thread_name_prefix='prepare-read');self.threads=[]
+        self.stop=threading.Event();self.pool=ThreadPoolExecutor(max_workers=4,thread_name_prefix='prepare-account')
+        # Each account collection must progress independently to publish a fresh
+        # cohort. Cash and metadata must not queue behind paginated history.
+        self.cash_pool=ThreadPoolExecutor(max_workers=1,thread_name_prefix='prepare-cash')
+        self.meta_pool=ThreadPoolExecutor(max_workers=2,thread_name_prefix='prepare-meta');self.threads=[]
     def client(self):return self.client_factory()
     def target(self):
         values=self.market_source();return values[0] if values else None
@@ -241,7 +245,7 @@ class Refreshers:
                 market=verified[0] if verified and hint and verified[0]['ticker']==hint['ticker'] else None
                 if market:
                     epoch=self.inputs.epoch()
-                    result,started=self.pool.submit(self._get,'/portfolio/balance',market_scope(market)).result()
+                    result,started=self.cash_pool.submit(self._get,'/portfolio/balance',market_scope(market)).result()
                     self.inputs.set_cash(epoch,market,cash_cents(result),started);self.notify()
             except Exception:
                 if not self.stop.is_set():self.inputs.cash_uncertain();self.notify()
@@ -251,15 +255,15 @@ class Refreshers:
             try:
                 hint=self.target()
                 if hint:
-                    market_job=self.pool.submit(self._get,'/markets/'+hint['ticker'])
-                    exchange_job=self.pool.submit(self._get,'/exchange/status')
+                    market_job=self.meta_pool.submit(self._get,'/markets/'+hint['ticker'])
+                    exchange_job=self.meta_pool.submit(self._get,'/exchange/status')
                     response,market_started=market_job.result();market=response['market']
                     self.inputs.set_meta('market',market,market_started);self.notify()
                     exchange,exchange_started=exchange_job.result()
                     self.inputs.set_meta('exchange',exchange,exchange_started);self.notify()
                     fees=self.inputs.view()['fees'];key=(market['ticker'],market.get('event_ticker'))
                     if not fees or fees[0][0]!=key or self.inputs.clock()-fees[1]>FEES_TTL/2:
-                        try:reserve,fee_started=self.pool.submit(self._read_fees,market).result()
+                        try:reserve,fee_started=self.meta_pool.submit(self._read_fees,market).result()
                         except Exception:
                             if not self.stop.is_set():self.inputs.fees_uncertain();self.notify()
                             continue
@@ -272,6 +276,8 @@ class Refreshers:
             thread=threading.Thread(target=work,daemon=True);thread.start();self.threads.append(thread)
     def close(self):
         self.stop.set();self.pool.shutdown(wait=False,cancel_futures=True)
+        self.cash_pool.shutdown(wait=False,cancel_futures=True)
+        self.meta_pool.shutdown(wait=False,cancel_futures=True)
         for thread in self.threads:thread.join(timeout=.2)
 
 
@@ -410,6 +416,11 @@ class PreparedEngine:
                 self.inputs.invalidate('Residual buy cancellation; refresh required')
                 with self.journal.db:self.journal.db.execute('INSERT INTO prepared_cancellations VALUES(?,?)',(active['client_id'],self.clock()))
                 try:self.journal.cancel(self.broker)
+                except APIError as exc:
+                    if exc.status!=404:raise
+                    # A missing cancellation target is not proof of a terminal
+                    # order. Keep the reservation and wait for a newer cohort.
+                    self.journal.log('Cancellation returned 404; awaiting fresh order reconciliation; duplicate submissions blocked')
                 finally:
                     with self.journal.db:self.journal.db.execute('UPDATE prepared_cancellations SET after=? WHERE client_id=?',(self.clock(),active['client_id']))
                 return {'status':'Canceling residual buy before further execution','ticker':ticker}
