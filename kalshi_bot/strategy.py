@@ -4,20 +4,20 @@ from collections import deque
 import math
 
 ENTRY_WINDOW_SECONDS=240
-ENTRY_CUTOFF_SECONDS=30
+ENTRY_CUTOFF_SECONDS=15
 
 
 @dataclass(frozen=True)
 class StrategyPolicy:
     buy_min_cents:int=96
-    sell_cents:int=92
+    sell_cents:int=89
     entry_window_seconds:int=240
-    entry_cutoff_seconds:int=30
-    max_volatility_pct:float=100.0
-    max_volatility_5m_pct:float=100.0
-    max_shock_1m_pct:float=100.0
-    target_buy_usd:float=50.0
-    target_exit_usd:float=35.0
+    entry_cutoff_seconds:int=15
+    max_volatility_pct:float=12.0
+    max_volatility_5m_pct:float=11.0
+    max_shock_1m_pct:float=11.0
+    target_buy_usd:float=30.0
+    target_exit_usd:float=19.0
 
     def __post_init__(self):
         if (any(type(v) not in (int,float) or not math.isfinite(v) for v in (self.target_buy_usd,self.target_exit_usd))
@@ -39,14 +39,15 @@ class StrategyPolicy:
             raise ValueError('1-minute shock limit must be between 0 and 100 percent')
 
 
-_POLICY=StrategyPolicy()
+DEFAULT_POLICY=StrategyPolicy()
+_POLICY=DEFAULT_POLICY
 
 
 def policy():
     return _POLICY
 
 
-def set_policy(buy_min_cents,sell_cents,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0,target_buy_usd=50.0,target_exit_usd=35.0):
+def set_policy(buy_min_cents,sell_cents,entry_window_seconds=DEFAULT_POLICY.entry_window_seconds,entry_cutoff_seconds=DEFAULT_POLICY.entry_cutoff_seconds,max_volatility_pct=DEFAULT_POLICY.max_volatility_pct,max_volatility_5m_pct=DEFAULT_POLICY.max_volatility_5m_pct,max_shock_1m_pct=DEFAULT_POLICY.max_shock_1m_pct,target_buy_usd=DEFAULT_POLICY.target_buy_usd,target_exit_usd=DEFAULT_POLICY.target_exit_usd):
     global _POLICY,ENTRY_WINDOW_SECONDS,ENTRY_CUTOFF_SECONDS
     _POLICY=StrategyPolicy(buy_min_cents,sell_cents,entry_window_seconds,entry_cutoff_seconds,float(max_volatility_pct),float(max_volatility_5m_pct),float(max_shock_1m_pct),float(target_buy_usd),float(target_exit_usd))
     ENTRY_WINDOW_SECONDS=_POLICY.entry_window_seconds

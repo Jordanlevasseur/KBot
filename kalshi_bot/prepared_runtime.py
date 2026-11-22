@@ -1,5 +1,6 @@
 """Standard prepared execution runtime; sole journal/order owner plus GET workers."""
 import json
+from .strategy import DEFAULT_POLICY
 import sqlite3
 from pathlib import Path
 import signal
@@ -123,7 +124,7 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
                 try:
                     if journal.running or journal.position() or journal.active() or not journal.ready:
                         raise ValueError('Pause entries and wait for a confirmed flat account before changing strategy')
-                    configured=set_policy(command.get('buy_min_cents'),command.get('sell_cents'),command.get('entry_window_seconds',240),command.get('entry_cutoff_seconds',30),command.get('max_volatility_pct',100),command.get('max_volatility_5m_pct',100),command.get('max_shock_1m_pct',100),command.get('target_buy_usd',50),command.get('target_exit_usd',35))
+                    configured=set_policy(command.get('buy_min_cents'),command.get('sell_cents'),command.get('entry_window_seconds',DEFAULT_POLICY.entry_window_seconds),command.get('entry_cutoff_seconds',DEFAULT_POLICY.entry_cutoff_seconds),command.get('max_volatility_pct',DEFAULT_POLICY.max_volatility_pct),command.get('max_volatility_5m_pct',DEFAULT_POLICY.max_volatility_5m_pct),command.get('max_shock_1m_pct',DEFAULT_POLICY.max_shock_1m_pct),command.get('target_buy_usd',DEFAULT_POLICY.target_buy_usd),command.get('target_exit_usd',DEFAULT_POLICY.target_exit_usd))
                     engine.plans={};engine.sell=None;engine.revision=-1
                     inputs.invalidate('Strategy changed; rebuilding prepared orders')
                     from dataclasses import asdict

@@ -14,7 +14,7 @@ from decimal import Decimal, ROUND_CEILING
 from pathlib import Path
 from .api import APIError, SchemaError, TICKER, decimal
 from .trade_api import OrderNotSent
-from .strategy import entry_open,contract_target,ENTRY_CUTOFF_SECONDS,policy
+from .strategy import entry_open,contract_target,policy
 
 D=Decimal
 TERMINAL={'executed','canceled','rejected','expired'}
@@ -36,7 +36,7 @@ def order_payload(ticker,action,side,price,quantity,cutoff,client_id):
     book_side='bid' if (action=='buy')==(side=='yes') else 'ask'
     return {'ticker':ticker,'client_order_id':client_id,'side':book_side,
             'price':format(yes_price,'.4f'),'count':format(quantity,'f'),
-            'time_in_force':'good_till_canceled','expiration_time':int(cutoff)-ENTRY_CUTOFF_SECONDS if action=='buy' else int(cutoff),
+            'time_in_force':'good_till_canceled','expiration_time':int(cutoff)-current.entry_cutoff_seconds if action=='buy' else int(cutoff),
             'self_trade_prevention_type':'taker_at_cross','cancel_order_on_pause':True,
             'subaccount':0,'strategy':{'buy_min_cents':current.buy_min_cents,'sell_cents':current.sell_cents,'entry_window_seconds':current.entry_window_seconds,'entry_cutoff_seconds':current.entry_cutoff_seconds,'protective_exit':action=='sell'}}
 

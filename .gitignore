@@ -12,3 +12,5 @@ research/threshold_10000_data/
 docs/*.csv
 docs/*.json
 docs/*.diff
+research/history_audit_cache/
+docs/LAST_30_MARKETS_ANALYSIS.html

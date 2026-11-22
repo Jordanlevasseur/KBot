@@ -7,7 +7,6 @@ import time
 from decimal import Decimal
 from urllib.parse import urlencode, urlsplit
 from .api import APIError, MAX_BODY, ROOT, SchemaError, Signer, TICKER, UnixHTTP, allowed_path, decimal
-from .strategy import ENTRY_WINDOW_SECONDS,ENTRY_CUTOFF_SECONDS
 from .strategy import StrategyPolicy
 
 CREATE=ROOT+'/portfolio/events/orders'
@@ -50,7 +49,7 @@ def validate_write(method,target,body=None,now=None):
         raise ValueError('Order price/quantity violates strategy')
     if body['time_in_force']!='good_till_canceled' or body['self_trade_prevention_type']!='taker_at_cross' or body['cancel_order_on_pause'] is not True or type(body['subaccount']) is not int or body['subaccount']!=0:
         raise ValueError('Unexpected order execution parameters')
-    if type(body['expiration_time']) is not int or not 0<body['expiration_time']-now<=(ENTRY_WINDOW_SECONDS-ENTRY_CUTOFF_SECONDS if buy else 900):
+    if type(body['expiration_time']) is not int or not 0<body['expiration_time']-now<=(configured.entry_window_seconds-configured.entry_cutoff_seconds if buy else 900):
         raise ValueError('Order outside allowed expiry window')
     return parsed.path
 

@@ -14,7 +14,7 @@ with tempfile.TemporaryDirectory() as directory:
     base=Path(directory)
     with patch('kalshi_bot.desktop.paths',return_value=(base/'state',base/'config')):
         root=tk.Tk();root.withdraw();app=Application(root,autostart=False)
-        assert float(app.target_buy.get())==50 and float(app.target_exit.get())==35
+        assert float(app.target_buy.get())==30 and float(app.target_exit.get())==19
         app.target_buy.set('75.5');app.target_exit.set('40.25')
         app.apply_strategy()
         deadline=time.monotonic()+5

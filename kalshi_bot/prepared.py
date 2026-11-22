@@ -319,7 +319,7 @@ class PreparedEngine:
                 reason=guard(plan.ticker,plan.side)
                 if reason:raise OrderNotSent(reason)
             from .strategy import ENTRY_CUTOFF_SECONDS
-            if time.time()>=plan.cutoff-ENTRY_CUTOFF_SECONDS:raise OrderNotSent('Final 30-second purchase cutoff reached before transmission')
+            if time.time()>=plan.cutoff-ENTRY_CUTOFF_SECONDS:raise OrderNotSent(f'Final {ENTRY_CUTOFF_SECONDS}-second purchase cutoff reached before transmission')
             if not self.journal.running:raise OrderNotSent('Entries paused before transmission')
             fees=self.inputs.view()['fees']
             if not fees or plan.verified_fee!=fees[0][1]:raise OrderNotSent('Prepared fee schedule changed before transmission')
@@ -448,7 +448,7 @@ class PreparedEngine:
             return {'status':'Market scope changed; refreshing prepared state','ticker':ticker}
         self.scope_mismatch=None
         if not entry_open(close,now):
-            reason='New purchases blocked during final 30 seconds' if 0<close-now<=ENTRY_CUTOFF_SECONDS else 'Waiting for final four-minute entry window'
+            reason=f'New purchases blocked during final {ENTRY_CUTOFF_SECONDS} seconds' if 0<close-now<=ENTRY_CUTOFF_SECONDS else 'Waiting for final four-minute entry window'
             return {'status':reason,'ticker':ticker,'cutoff':close}
         prices=self.feed.quote(ticker)
         if prices is None:return {'status':'Waiting for fresh sequenced prices','ticker':ticker,'cutoff':close}

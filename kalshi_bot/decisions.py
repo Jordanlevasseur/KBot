@@ -11,7 +11,7 @@ from pathlib import Path
 from decimal import Decimal as D
 from .account import cutoff
 from .eligibility import eligible_sides,ordered_candidates,entry_limit
-from .strategy import entry_open,ENTRY_CUTOFF_SECONDS
+from .strategy import entry_open
 from .strategy import policy
 
 INTERVAL_SECONDS=.25
@@ -69,8 +69,8 @@ def assess(context,market,prices,risk_prices,running,phase,now):
     if not market:return decision('no_market','Waiting for an active Bitcoin market')
     ticker=market['ticker']
     if now>=cutoff(market):return decision('closed','Market closed; awaiting rollover')
-    if cutoff(market)-now<=ENTRY_CUTOFF_SECONDS:
-        return decision('entry_closed','New purchases blocked during final 30 seconds')
+    if cutoff(market)-now<=policy().entry_cutoff_seconds:
+        return decision('entry_closed',f'New purchases blocked during final {policy().entry_cutoff_seconds} seconds')
     if market.get('status') not in ('open','active') or market.get('market_type')!='binary' or not entry_open(cutoff(market),now):
         return decision('outside_window','Waiting for the final four-minute entry window')
     if prices is None:return decision('stale','Fresh sequenced prices unavailable; entry blocked')

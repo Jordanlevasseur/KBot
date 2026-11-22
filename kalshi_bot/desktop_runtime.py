@@ -1,5 +1,6 @@
 """Desktop process boundary: no browser, shell evaluation, or Internet transport."""
 import json
+from .strategy import DEFAULT_POLICY
 import os
 from pathlib import Path
 import queue
@@ -30,7 +31,7 @@ def paths():
     return state,config
 
 
-def sandbox_command(root,state,mode,credentials=None,preflight=False,fee_reserve=None,buy_min_cents=96,sell_cents=92,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0,target_buy_usd=50.0,target_exit_usd=35.0):
+def sandbox_command(root,state,mode,credentials=None,preflight=False,fee_reserve=None,buy_min_cents=DEFAULT_POLICY.buy_min_cents,sell_cents=DEFAULT_POLICY.sell_cents,entry_window_seconds=DEFAULT_POLICY.entry_window_seconds,entry_cutoff_seconds=DEFAULT_POLICY.entry_cutoff_seconds,max_volatility_pct=DEFAULT_POLICY.max_volatility_pct,max_volatility_5m_pct=DEFAULT_POLICY.max_volatility_5m_pct,max_shock_1m_pct=DEFAULT_POLICY.max_shock_1m_pct,target_buy_usd=DEFAULT_POLICY.target_buy_usd,target_exit_usd=DEFAULT_POLICY.target_exit_usd):
     if mode not in MODES: raise ValueError('Unsupported desktop mode')
     root=Path(root).resolve()
     state=Path(state).resolve()

@@ -17,7 +17,7 @@ from .discovery import open_markets
 from .eligibility import eligible_sides,ordered_candidates,entry_limit
 from .diagnostics import failure_reason
 from .streams import BookHub
-from .strategy import ENTRY_WINDOW_SECONDS,ENTRY_CUTOFF_SECONDS,entry_open
+from .strategy import entry_open
 from .buying_power import market_cash,market_scope
 from .strategy import policy
 
@@ -148,9 +148,9 @@ def _evaluate(journal,client,broker,fee_reserve,now,book_feed,market_source,step
     visible={'status':'No open Bitcoin 15-minute market'}
     if markets:
         current=markets[0]
-        visible={'status':f'Waiting for the final {ENTRY_WINDOW_SECONDS//60}-minute entry window' if cutoff(current)-now>ENTRY_WINDOW_SECONDS else f'No qualifying {policy().buy_min_cents}–99¢ entry',
+        visible={'status':f'Waiting for the final {policy().entry_window_seconds//60}-minute entry window' if cutoff(current)-now>policy().entry_window_seconds else f'No qualifying {policy().buy_min_cents}–99¢ entry',
                  'ticker':current['ticker'],'cutoff':cutoff(current)}
-        if 0<cutoff(current)-now<=ENTRY_CUTOFF_SECONDS:visible['status']='New purchases blocked during final 30 seconds'
+        if 0<cutoff(current)-now<=policy().entry_cutoff_seconds:visible['status']=f'New purchases blocked during final {policy().entry_cutoff_seconds} seconds'
         if book_feed:
             book_feed.watch(current['ticker'])
             quote=book_feed.quote(current['ticker'])

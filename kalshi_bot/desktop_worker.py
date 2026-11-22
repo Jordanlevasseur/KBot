@@ -1,6 +1,7 @@
 """JSON-lines IPC worker. Runs only inside the application's Linux sandbox."""
 import argparse
 import json
+from .strategy import DEFAULT_POLICY
 import resource
 import select
 import signal
@@ -83,7 +84,7 @@ def run_simulation(directory):
                         current=engine.status()
                         if current['account']['running'] or current['positions'] or current['active_orders']:
                             raise ValueError('Pause entries and close positions/orders before changing strategy')
-                        configured=set_policy(message.get('buy_min_cents'),message.get('sell_cents'),message.get('entry_window_seconds',240),message.get('entry_cutoff_seconds',30),message.get('max_volatility_pct',100),message.get('max_volatility_5m_pct',100),message.get('max_shock_1m_pct',100),message.get('target_buy_usd',50),message.get('target_exit_usd',35))
+                        configured=set_policy(message.get('buy_min_cents'),message.get('sell_cents'),message.get('entry_window_seconds',DEFAULT_POLICY.entry_window_seconds),message.get('entry_cutoff_seconds',DEFAULT_POLICY.entry_cutoff_seconds),message.get('max_volatility_pct',DEFAULT_POLICY.max_volatility_pct),message.get('max_volatility_5m_pct',DEFAULT_POLICY.max_volatility_5m_pct),message.get('max_shock_1m_pct',DEFAULT_POLICY.max_shock_1m_pct),message.get('target_buy_usd',DEFAULT_POLICY.target_buy_usd),message.get('target_exit_usd',DEFAULT_POLICY.target_exit_usd))
                         from dataclasses import asdict
                         emit('strategy',**asdict(configured))
                     elif command=='refresh': pass
@@ -320,15 +321,15 @@ def main():
     p.add_argument('--preflight',action='store_true')
     p.add_argument('--fee-reserve')
     p.add_argument('--authorize-live-orders',action='store_true')
-    p.add_argument('--buy-min-cents',type=int,default=96)
-    p.add_argument('--sell-cents',type=int,default=92)
-    p.add_argument('--entry-window-seconds',type=int,default=240)
-    p.add_argument('--entry-cutoff-seconds',type=int,default=30)
-    p.add_argument('--max-volatility-pct',type=float,default=100.0)
-    p.add_argument('--max-volatility-5m-pct',type=float,default=100.0)
-    p.add_argument('--max-shock-1m-pct',type=float,default=100.0)
-    p.add_argument('--target-buy-usd',type=float,default=50.0)
-    p.add_argument('--target-exit-usd',type=float,default=35.0)
+    p.add_argument('--buy-min-cents',type=int,default=DEFAULT_POLICY.buy_min_cents)
+    p.add_argument('--sell-cents',type=int,default=DEFAULT_POLICY.sell_cents)
+    p.add_argument('--entry-window-seconds',type=int,default=DEFAULT_POLICY.entry_window_seconds)
+    p.add_argument('--entry-cutoff-seconds',type=int,default=DEFAULT_POLICY.entry_cutoff_seconds)
+    p.add_argument('--max-volatility-pct',type=float,default=DEFAULT_POLICY.max_volatility_pct)
+    p.add_argument('--max-volatility-5m-pct',type=float,default=DEFAULT_POLICY.max_volatility_5m_pct)
+    p.add_argument('--max-shock-1m-pct',type=float,default=DEFAULT_POLICY.max_shock_1m_pct)
+    p.add_argument('--target-buy-usd',type=float,default=DEFAULT_POLICY.target_buy_usd)
+    p.add_argument('--target-exit-usd',type=float,default=DEFAULT_POLICY.target_exit_usd)
     a=p.parse_args()
     try:
         from .strategy import set_policy

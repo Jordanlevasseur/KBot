@@ -2,6 +2,8 @@
 import argparse
 import fcntl
 import json
+from dataclasses import asdict
+from .strategy import DEFAULT_POLICY
 import logging
 from logging.handlers import RotatingFileHandler,QueueHandler,QueueListener
 import os
@@ -81,13 +83,13 @@ class Application:
         self.state_root.mkdir(parents=True,exist_ok=True,mode=0o700)
         self.config_root.mkdir(parents=True,exist_ok=True,mode=0o700)
         self.strategy_path=self.config_root/'strategy.json'
-        self.strategy_values={'buy_min_cents':96,'sell_cents':92,'entry_window_seconds':240,'entry_cutoff_seconds':30,'max_volatility_pct':100.0}
+        self.strategy_values=asdict(DEFAULT_POLICY)
         try:
             raw=json.loads(self.strategy_path.read_text())
             saved=StrategyPolicy(raw['buy_min_cents'],raw['sell_cents'],
-                                 raw.get('entry_window_seconds',240),raw.get('entry_cutoff_seconds',30),
-                                 raw.get('max_volatility_pct',100.0),raw.get('max_volatility_5m_pct',100.0),
-                                 raw.get('max_shock_1m_pct',100.0),raw.get('target_buy_usd',50.0),raw.get('target_exit_usd',35.0))
+                                 raw.get('entry_window_seconds',DEFAULT_POLICY.entry_window_seconds),raw.get('entry_cutoff_seconds',DEFAULT_POLICY.entry_cutoff_seconds),
+                                 raw.get('max_volatility_pct',DEFAULT_POLICY.max_volatility_pct),raw.get('max_volatility_5m_pct',DEFAULT_POLICY.max_volatility_5m_pct),
+                                 raw.get('max_shock_1m_pct',DEFAULT_POLICY.max_shock_1m_pct),raw.get('target_buy_usd',DEFAULT_POLICY.target_buy_usd),raw.get('target_exit_usd',DEFAULT_POLICY.target_exit_usd))
             self.strategy_values={'buy_min_cents':saved.buy_min_cents,'sell_cents':saved.sell_cents,
                                   'entry_window_seconds':saved.entry_window_seconds,'entry_cutoff_seconds':saved.entry_cutoff_seconds,
                                   'max_volatility_pct':saved.max_volatility_pct,'max_volatility_5m_pct':saved.max_volatility_5m_pct,
@@ -137,10 +139,10 @@ class Application:
         self.entry_window=tk.StringVar(value=str(self.strategy_values['entry_window_seconds']))
         self.entry_cutoff=tk.StringVar(value=str(self.strategy_values['entry_cutoff_seconds']))
         self.max_volatility=tk.StringVar(value=str(self.strategy_values['max_volatility_pct']))
-        self.max_volatility_5m=tk.StringVar(value=str(self.strategy_values.get('max_volatility_5m_pct',100.0)))
-        self.max_shock_1m=tk.StringVar(value=str(self.strategy_values.get('max_shock_1m_pct',100.0)))
-        self.target_buy=tk.StringVar(value=str(self.strategy_values.get('target_buy_usd',50.0)))
-        self.target_exit=tk.StringVar(value=str(self.strategy_values.get('target_exit_usd',35.0)))
+        self.max_volatility_5m=tk.StringVar(value=str(self.strategy_values.get('max_volatility_5m_pct',DEFAULT_POLICY.max_volatility_5m_pct)))
+        self.max_shock_1m=tk.StringVar(value=str(self.strategy_values.get('max_shock_1m_pct',DEFAULT_POLICY.max_shock_1m_pct)))
+        self.target_buy=tk.StringVar(value=str(self.strategy_values.get('target_buy_usd',DEFAULT_POLICY.target_buy_usd)))
+        self.target_exit=tk.StringVar(value=str(self.strategy_values.get('target_exit_usd',DEFAULT_POLICY.target_exit_usd)))
         self.strategy_status_ui=tk.StringVar(value='')
         self.prepared_status=tk.StringVar(value='')
         self.power_status=tk.StringVar(value='')
@@ -887,7 +889,7 @@ class Application:
             elif kind=='state': self.update_state(message['state'])
             elif kind=='strategy':
                 self.data['buy_min_cents']=message['buy_min_cents'];self.data['sell_cents']=message['sell_cents']
-                self.strategy_status_ui.set(f"Active: buy from {message['buy_min_cents']}¢; sell trigger {message['sell_cents']}¢; entry starts {message['entry_window_seconds']}s before close; blocks final {message['entry_cutoff_seconds']}s. Target buy ${message.get('target_buy_usd',50):g}; exit ${message.get('target_exit_usd',35):g}.")
+                self.strategy_status_ui.set(f"Active: buy from {message['buy_min_cents']}¢; sell trigger {message['sell_cents']}¢; entry starts {message['entry_window_seconds']}s before close; blocks final {message['entry_cutoff_seconds']}s. Target buy ${message.get('target_buy_usd',DEFAULT_POLICY.target_buy_usd):g}; exit ${message.get('target_exit_usd',DEFAULT_POLICY.target_exit_usd):g}.")
             elif kind=='strategy-error':
                 self.strategy_status_ui.set('Strategy update rejected: '+message.get('message','worker state changed'))
             elif kind=='profit-ready':

@@ -236,4 +236,6 @@ See [validation results](docs/VALIDATION.md) for measured resource usage and lim
 - Entries paused after restart: intentional; verify the visible position and
   active order, then press `s` if you want more simulated entries.
 
-The entry window excludes the closing 30 seconds: new buys require more than 30 and at most 240 seconds remaining. Unfilled buys expire at close minus 30 seconds; protective selling continues until close. See docs/CLOSING_PURCHASE_CUTOFF.md.
+The default entry window excludes the closing 15 seconds: new buys require more than 15 and at most 240 seconds remaining. Unfilled buys expire at close minus 15 seconds; protective selling continues until close. These timing values remain editable in the desktop settings.
+
+Fresh installations default to a 96¢ minimum buy threshold (99¢ maximum), an 89¢ protective trigger, volatility ceilings of 11 points for the 1-minute range, 11 points for the 5-minute average, and 12 points for the 15-minute average, and Bitcoin target cushions of $30 for entry and $19 for exit. Volatility at or above a ceiling blocks entry. These are saved user preferences, not an assertion of optimal profitability. Existing saved settings take precedence; changing defaults does not enable trading.

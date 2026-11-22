@@ -9,7 +9,7 @@ from test_prepared import Fixture
 
 class EntryGuardTests(unittest.TestCase):
     def setUp(self):
-        set_policy(95,89,240,30,30,25,20)
+        set_policy(95,89,240,30,30,25,20,50,35)
         self.wall=1000.;self.mono=500.
         self.market={'ticker':'KXBTC15M-TEST','floor_strike':60000}
         self.reference={'value':'60060','source_ms':1000000,'sample_mono':500.,'status':'Live'}
