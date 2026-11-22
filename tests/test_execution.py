@@ -143,11 +143,10 @@ class ExecutionTests(unittest.TestCase):
         with self.assertRaises(RuntimeError): self.reconcile(position='0')
         self.assertFalse(self.j.ready)
 
-    def test_sell_below_71_rejected(self):
+    def test_sell_below_trigger_allowed_after_latch(self):
         self.buy(); self.reconcile()
         self.j.latch_stop('KXBTC15M-TEST','yes',D('.70'))
-        with self.assertRaises(ValueError):
-            self.j.submit(self.b,'KXBTC15M-TEST','sell','yes',D('.70'),10,900,800)
+        self.j.submit(self.b,'KXBTC15M-TEST','sell','yes',D('.70'),10,900,800)
 
     def test_complete_sale_allows_many_sequential_buys(self):
         for number in range(1,9):

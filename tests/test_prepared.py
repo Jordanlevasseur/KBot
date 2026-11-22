@@ -137,7 +137,7 @@ class PreparedTests(unittest.TestCase):
             f.qualify();f.execute();f.venue.fill(f.venue.orders[0],3);f.publish()
             f.inputs.cash_uncertain();f.engine.build(f.market);f.feed.prices['yes_bid']=D('.70')
             f.execute();self.assertEqual(D(f.venue.sells()[0]['initial_count_fp']),3)
-            self.assertEqual(D(f.venue.sells()[0]['yes_price_dollars']),D('.71'))
+            self.assertEqual(D(f.venue.sells()[0]['yes_price_dollars']),D('.01'))
         self.each(run)
     def test_price_departure_pause_and_cutoff_do_not_send(self):
         for case in ('price','stale','pause','cutoff'):

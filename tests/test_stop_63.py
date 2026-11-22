@@ -24,7 +24,7 @@ class Stop63Tests(unittest.TestCase):
                         sells=f.venue.sells();self.assertEqual(len(sells),1)
                         o=sells[0];self.assertEqual(D(o['initial_count_fp']),D('10'))
                         self.assertEqual(f.venue.actions[o['order_id']],('sell',side))
-                        self.assertEqual((D(o['yes_price_dollars']) if side=='yes' else 1-D(o['yes_price_dollars'])),D('.63'))
+                        self.assertEqual((D(o['yes_price_dollars']) if side=='yes' else 1-D(o['yes_price_dollars'])),D('.01'))
                         f.cycle('.92');f.restart();f.cycle('.92')
                         self.assertTrue(f.stop());self.assertEqual(len(f.venue.sells()),1)
                     finally:f.close()
@@ -35,5 +35,5 @@ class Stop63Tests(unittest.TestCase):
                 validate_write('POST',CREATE,p,now=800)
             p=order_payload('KXBTC15M-T','sell',side,D('.63'),3,900,'test-sell')
             validate_write('POST',CREATE,p,now=800)
-            for price in ('.62','.64','.71','.86'):
+            for price in ('0','.64','.71','.86'):
                 with self.assertRaises(ValueError):order_payload('KXBTC15M-T','sell',side,D(price),3,900,'test-sell')

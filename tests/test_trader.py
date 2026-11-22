@@ -51,7 +51,7 @@ class Venue:
         raise AssertionError(path)
 
     def market(self):
-        return {'ticker':'KXBTC15M-T','market_type':'binary','exchange_index':0,'status':'active',
+        return {'ticker':'KXBTC15M-T','price_ranges':[{'start':'0','end':'1','step':'.01'}],'market_type':'binary','exchange_index':0,'status':'active',
                 'open_time':dt.datetime.fromtimestamp(self.close-900,dt.timezone.utc).isoformat(),'close_time':dt.datetime.fromtimestamp(self.close,dt.timezone.utc).isoformat()}
 
     def get(self,path,params=None):
@@ -77,7 +77,7 @@ class TraderTests(unittest.TestCase):
                 venue.bid=D('.70'); venue.ask=D('.87')
                 cycle(j,venue,venue,D('.02'),now=2000000002)
                 self.assertEqual(len(venue.orders),2)
-                self.assertEqual(venue.orders[-1]['yes_price_dollars'],'0.7100')
+                self.assertEqual(venue.orders[-1]['yes_price_dollars'],'0.0100')
                 cycle(j,venue,venue,D('.02'),now=2000000003)
                 self.assertEqual(len(venue.orders),2)
                 venue.bid=D('.94'); venue.ask=D('.96'); venue.fill(buy=False)

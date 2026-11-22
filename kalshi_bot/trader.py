@@ -118,7 +118,8 @@ def _evaluate(journal,client,broker,fee_reserve,now,book_feed,market_source,step
         elif stop and not active:
             send_now=time.time() if use_wall_clock else now
             if send_now<close:
-                stop=Decimal(policy().sell_cents)/100
+                from .exit_price import protective_limit
+                stop=protective_limit(market,side)
                 step('Submitting protective sell',ticker=ticker,side=side,limit=str(stop),quantity=str(quantity))
                 journal.submit(broker,ticker,'sell',side,stop,quantity,close,send_now)
         return {'status':'Stop latched' if stop else 'Holding to settlement','ticker':ticker,'quantity':str(quantity),'bid':str(prices[side+'_bid']),'cutoff':close}

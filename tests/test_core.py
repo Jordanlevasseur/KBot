@@ -49,7 +49,7 @@ class StrategyTests(unittest.TestCase):
 
     def test_repeated_stop_keeps_protective_order_and_fills_intact(self):
         self.tick()
-        self.tick(bid=85)
+        self.tick(bid=85,liquidity=0)
         order=self.active()
         self.assertEqual(order['action'],'sell')
         fills=[dict(row) for row in self.e.db.execute('SELECT * FROM fills')]
@@ -94,9 +94,9 @@ class StrategyTests(unittest.TestCase):
     def test_repeated_buys_only_after_complete_sale(self):
         self.tick()
         self.assertEqual(self.buys(),1)
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         sell=self.active()
-        self.assertEqual(sell['price'],86)
+        self.assertEqual(sell['price'],1)
         self.tick(bid=88,ask=90,liquidity=1)
         self.assertEqual(self.buys(),1)
         self.assertIsNotNone(self.position())
@@ -122,7 +122,7 @@ class StrategyTests(unittest.TestCase):
     def test_partial_entry_canceled_before_stop_sell(self):
         self.tick(liquidity=2)
         buy=self.active()['id']
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         self.assertEqual(self.e.row('SELECT * FROM orders WHERE id=?',(buy,))['status'],'canceled')
         self.assertEqual(self.active()['action'],'sell')
         self.assertEqual(self.active()['qty'],2)
@@ -143,7 +143,7 @@ class StrategyTests(unittest.TestCase):
 
     def test_stop_persists_rebound_and_restart(self):
         self.tick()
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         oid=self.active()['id']
         self.e.close()
         self.e=Engine(self.path)
@@ -158,24 +158,24 @@ class StrategyTests(unittest.TestCase):
         self.tick(bid=86,ask=88,liquidity=0)
         for _ in range(40):
             self.e.cancel(self.active()['id'],rejected=bool(self.t%2))
-            self.tick(bid=84,ask=86)
-            self.assertEqual(self.active()['price'],86)
+            self.tick(bid=84,ask=86,liquidity=0)
+            self.assertEqual(self.active()['price'],1)
         self.tick(bid=87,ask=89)
         self.assertIsNone(self.position())
         self.assertEqual(self.buys(),1)
 
     def test_keep_valid_sell_and_failed_execution(self):
         self.tick()
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         oid=self.active()['id']
         for _ in range(10):
-            self.tick(bid=83,ask=85)
+            self.tick(bid=83,ask=85,liquidity=0)
             self.assertEqual(self.active()['id'],oid)
         self.assertIsNotNone(self.position())
 
     def test_network_disconnect(self):
         self.tick()
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         before=self.position()
         self.tick(bid=90,ask=92,connected=False)
         self.assertEqual(before,self.position())
@@ -209,7 +209,7 @@ class StrategyTests(unittest.TestCase):
     def test_no_side_handling(self):
         self.e.tick(Quote('KXBTC15M-NO',900,780,4,95,5,96))
         self.assertEqual(self.position()['side'],'no')
-        self.e.tick(Quote('KXBTC15M-NO',900,781,14,85,15,86))
+        self.e.tick(Quote('KXBTC15M-NO',900,781,14,85,15,86,liquidity=0))
         self.assertEqual(self.position()['stop'],1)
         self.e.tick(Quote('KXBTC15M-NO',900,782,12,87,13,88))
         self.assertIsNone(self.position())
@@ -230,7 +230,7 @@ class StrategyTests(unittest.TestCase):
 
     def test_cutoff_expires_sell_without_fake_fill(self):
         self.tick()
-        self.tick(bid=85,ask=87)
+        self.tick(bid=85,ask=87,liquidity=0)
         self.t=900
         self.tick(bid=90,ask=92)
         self.assertIsNotNone(self.position())

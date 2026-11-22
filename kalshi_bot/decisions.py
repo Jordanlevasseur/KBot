@@ -77,6 +77,8 @@ def assess(context,market,prices,risk_prices,running,phase,now):
     if not sides:return decision('no_entry',f'No qualifying {policy().buy_min_cents}–99c executable ask')
     side=ordered_candidates(prices,ticker,context.get('previous_side'))[0]
     values={'side':side,'limit':str(entry_limit(prices[side+'_ask']))}
+    if phase.startswith(('Entry blocked:','Fresh Bitcoin reference')):
+        return decision('entry_blocked',phase,**values)
     if phase.startswith('Blocked:'):
         return decision('await_account',side.upper()+' qualifies; '+phase,**values)
     if age is None or not 0<=age<=1:

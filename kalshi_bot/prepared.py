@@ -105,7 +105,7 @@ class Inputs:
         with self.lock:
             if kind=='market':
                 market_scope(value)
-                if self.market and any(self.market[0].get(k)!=value.get(k) for k in ('ticker','exchange_index','event_ticker','close_time','status','market_type')):self._invalidate('Verified market metadata changed')
+                if self.market and any(self.market[0].get(k)!=value.get(k) for k in ('ticker','exchange_index','event_ticker','close_time','status','market_type','price_ranges','floor_strike')):self._invalidate('Verified market metadata changed')
             elif kind=='exchange' and value.get('trading_active') is not True:self._invalidate('Exchange is not trading')
             setattr(self,kind,(copy.deepcopy(value),at));self.revision+=1;self.changed.set()
     def view(self):
@@ -314,6 +314,10 @@ class PreparedEngine:
         if self.inputs.epoch()!=self.claim_generation:raise OrderNotSent('Prepared inputs changed before transmission')
         if time.time()>=plan.cutoff:raise OrderNotSent('Official cutoff passed before transmission')
         if plan.action=='buy':
+            guard=getattr(self,'entry_guard',None)
+            if guard:
+                reason=guard(plan.ticker,plan.side)
+                if reason:raise OrderNotSent(reason)
             from .strategy import ENTRY_CUTOFF_SECONDS
             if time.time()>=plan.cutoff-ENTRY_CUTOFF_SECONDS:raise OrderNotSent('Final 30-second purchase cutoff reached before transmission')
             if not self.journal.running:raise OrderNotSent('Entries paused before transmission')
@@ -372,7 +376,8 @@ class PreparedEngine:
             (t,side),quantity=next(iter(held.items()))
             self.reason=self.inputs.fresh(view,t,selling=True)
             if not self.reason and verified and verified['status'] in ('open','active'):
-                self.sell=make_plan(view['generation'],verified,'sell',side,D(policy().sell_cents)/100,quantity,D(0))
+                from .exit_price import protective_limit
+                self.sell=make_plan(view['generation'],verified,'sell',side,protective_limit(verified,side),quantity,D(0))
         elif not self.reason and self.journal.ready:
             if verified.get('status') not in ('open','active'):self.reason='Market not active';return False
             prior=self.journal.db.execute("SELECT side FROM orders WHERE ticker=? AND action='buy' AND counted=1 ORDER BY rowid DESC LIMIT 1",(ticker,)).fetchone()
@@ -448,6 +453,10 @@ class PreparedEngine:
         prices=self.feed.quote(ticker)
         if prices is None:return {'status':'Waiting for fresh sequenced prices','ticker':ticker,'cutoff':close}
         for side in ordered_candidates(prices,ticker,self.previous_side):
+            guard=getattr(self,'entry_guard',None)
+            if guard:
+                reason=guard(ticker,side)
+                if reason:return {'status':reason,'ticker':ticker}
             ask=prices[side+'_ask']
             # Select a stored cent-limit variant; never resize on the quote path.
             plan=next((self.plans.get((side,D(cents)/100)) for cents in range(policy().buy_min_cents,100) if D(cents)/100>=ask),None)

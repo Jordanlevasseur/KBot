@@ -31,7 +31,7 @@ class StrategyMatrixTests(unittest.TestCase):
                             self.assertEqual(f.venue.actions[sell['order_id']],('sell',side))
                             self.assertEqual(D(sell['initial_count_fp']),3)
                             price=D(sell['yes_price_dollars'])
-                            self.assertEqual(price if side=='yes' else 1-price,D(stop)/100)
+                            self.assertEqual(price if side=='yes' else 1-price,D('.01'))
                             f.feed.prices[side+'_bid']=D('.99')
                             for _ in range(5):f.execute()
                             self.assertEqual(len(f.venue.sells()),1)

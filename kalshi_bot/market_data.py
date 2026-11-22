@@ -146,6 +146,9 @@ class MarketMonitor:
                 self.volatility.add(now,prices); self.volatility_sample_at=now
                 self.volatility_values=self.volatility.snapshot(now)
             volatility=dict(self.volatility_values)
+        provider=getattr(self,'volatility_provider',None)
+        if provider is not None:
+            volatility=dict(provider())
         held_prices=(self.strategy_feed.quote(position['ticker']) if self.strategy_feed else
                      prices if position and position.get('ticker')==ticker else None) if position else None
         held_quote=quote_state(held_prices,position,position['ticker'] if position else None)

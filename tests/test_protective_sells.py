@@ -58,7 +58,8 @@ class ProtectiveVenue:
         if error in ('reject','timeout_before','rate_limit'):
             raise APIError({'reject':400,'timeout_before':0,'rate_limit':429}[error])
         yes=D(p['price']);n=D(p['count'])
-        if p['side']=='bid' and yes>=D('.92'):action,side='buy','yes'
+        if p.get('strategy',{}).get('protective_exit'):action,side='sell',('yes' if p['side']=='ask' else 'no')
+        elif p['side']=='bid' and yes>=D('.92'):action,side='buy','yes'
         elif p['side']=='ask' and yes<=D('.08'):action,side='buy','no'
         elif p['side']=='ask' and yes==D(policy().sell_cents)/100:action,side='sell','yes'
         elif p['side']=='bid' and yes==1-D(policy().sell_cents)/100:action,side='sell','no'
@@ -107,7 +108,7 @@ class ProtectiveVenue:
         raise AssertionError(path)
     def market(self):
         stamp=lambda t:dt.datetime.fromtimestamp(t,dt.timezone.utc).isoformat()
-        return {'ticker':TICKER,'event_ticker':TICKER,'market_type':'binary','exchange_index':0,'status':'closed' if self.closed else 'active',
+        return {'ticker':TICKER,'price_ranges':[{'start':'0','end':'1','step':'.01'}],'event_ticker':TICKER,'market_type':'binary','exchange_index':0,'status':'closed' if self.closed else 'active',
                 'open_time':stamp(self.close-900),'close_time':stamp(self.close)}
     def get(self,path,params=None):
         if self.read_error:raise APIError(self.read_error if isinstance(self.read_error,int) else 0)
@@ -148,7 +149,7 @@ class ProtectiveSellTests(unittest.TestCase):
         sell=f.venue.sells()[-1]
         self.assertEqual(f.venue.actions[sell['order_id']],('sell',f.side))
         self.assertEqual(D(sell['initial_count_fp']),D(quantity))
-        self.assertEqual(D(sell['yes_price_dollars']),D('.86') if f.side=='yes' else D('.14'))
+        self.assertEqual(D(sell['yes_price_dollars']),D('.01') if f.side=='yes' else D('.99'))
         self.assertLessEqual(f.venue.max_live_sells,1)
 
     def test_hold_at_90_and_87_and_just_above_86(self):
@@ -512,7 +513,7 @@ class CrashBroker:
         with open(accepted,'w') as stream:
             json.dump(payload,stream);stream.flush();os.fsync(stream.fileno())
         os._exit(17)
-journal.submit(CrashBroker(),'KXBTC15M-PROTECT','sell',side,D('.86'),10,int(close),int(now))
+journal.submit(CrashBroker(),'KXBTC15M-PROTECT','sell',side,D('.01'),10,int(close),int(now))
 """
             process=subprocess.run([sys.executable,'-B','-c',script,str(f.path),str(remote),str(accepted),f.side,str(f.venue.close),str(f.venue.now)],capture_output=True,text=True,timeout=10)
             self.assertEqual(process.returncode,17)

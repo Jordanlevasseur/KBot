@@ -37,12 +37,15 @@ def validate_write(method,target,body=None,now=None):
         raise ValueError('Unexpected order fields')
     p,n=decimal(body['price'],'price'),decimal(body['count'],'quantity')
     strategy=body.get('strategy')
-    if not isinstance(strategy,dict) or set(strategy)!={'buy_min_cents','sell_cents','entry_window_seconds','entry_cutoff_seconds'}:
+    if not isinstance(strategy,dict) or set(strategy) not in ({'buy_min_cents','sell_cents','entry_window_seconds','entry_cutoff_seconds'}, {'buy_min_cents','sell_cents','entry_window_seconds','entry_cutoff_seconds','protective_exit'}):
         raise ValueError('Missing strategy policy')
+    protective=strategy.get('protective_exit',False)
+    if type(protective) is not bool:raise ValueError('Invalid protective execution flag')
     configured=StrategyPolicy(strategy['buy_min_cents'],strategy['sell_cents'],strategy['entry_window_seconds'],strategy['entry_cutoff_seconds'])
     minimum=Decimal(configured.buy_min_cents)/100;stop=Decimal(configured.sell_cents)/100
-    buy=(body['side']=='bid' and minimum<=p<=Decimal('.99')) or (body['side']=='ask' and Decimal('.01')<=p<=1-minimum)
-    sell=(body['side']=='ask' and p==stop) or (body['side']=='bid' and p==1-stop)
+    buy=not protective and ((body['side']=='bid' and minimum<=p<=Decimal('.99')) or (body['side']=='ask' and Decimal('.01')<=p<=1-minimum))
+    sell=((body['side']=='ask' and Decimal('.0001')<=p<=stop) or (body['side']=='bid' and 1-stop<=p<=Decimal('.9999'))) if protective else ((body['side']=='ask' and p==stop) or (body['side']=='bid' and p==1-stop))
+    if p*10000!=int(p*10000):raise ValueError('Invalid price precision')
     if not(buy or sell) or n<=0 or n*100!=int(n*100) or (buy and n!=n.to_integral_value()):
         raise ValueError('Order price/quantity violates strategy')
     if body['time_in_force']!='good_till_canceled' or body['self_trade_prevention_type']!='taker_at_cross' or body['cancel_order_on_pause'] is not True or type(body['subaccount']) is not int or body['subaccount']!=0:

@@ -78,7 +78,7 @@ class PriceSideTests(unittest.TestCase):
                 result=cycle(journal,venue,venue,D('.03'),now=venue.close-89)
                 self.assertEqual(len(venue.orders),2)
                 sell=journal.db.execute("SELECT side,price FROM orders WHERE action='sell'").fetchone()
-                self.assertEqual(tuple(sell),('no','0.71'))
+                self.assertEqual(tuple(sell),('no','0.01'))
             finally: journal.close()
 
 

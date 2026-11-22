@@ -185,7 +185,7 @@ class Engine:
                 # Cancel residual entry before creating a protective exit.
                 self.db.execute("UPDATE orders SET status='canceled' WHERE action='buy' AND status='active'")
                 if not self.row("SELECT * FROM orders WHERE status='active'"):
-                    self._order(q.ticker, 'sell', p['side'], policy().sell_cents, p['qty'])
+                    self._order(q.ticker, 'sell', p['side'], 1, p['qty'])
         active = self.row("SELECT * FROM orders WHERE status='active'")
         if active:
             if active['ticker'] == q.ticker:

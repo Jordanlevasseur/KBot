@@ -27,8 +27,8 @@ def order_payload(ticker,action,side,price,quantity,cutoff,client_id):
     current=policy();minimum=D(current.buy_min_cents)/100;stop=D(current.sell_cents)/100
     if action=='buy' and (price<minimum or price>D('.99') or price*100!=int(price*100) or quantity!=quantity.to_integral_value()):
         raise ValueError('Buy orders require whole contracts and a limit at or above the configured threshold')
-    if action=='sell' and price!=stop:
-        raise ValueError('Protective sell limit must match the configured trigger')
+    if action=='sell' and not (D('.0001')<=price<=stop and price*10000==int(price*10000)):
+        raise ValueError('Invalid protective execution limit')
     if quantity<=0 or quantity*100!=int(quantity*100):
         raise ValueError('Invalid contract quantity')
     # V2 represents everything in YES-leg prices and bid/ask direction.
@@ -38,7 +38,7 @@ def order_payload(ticker,action,side,price,quantity,cutoff,client_id):
             'price':format(yes_price,'.4f'),'count':format(quantity,'f'),
             'time_in_force':'good_till_canceled','expiration_time':int(cutoff)-ENTRY_CUTOFF_SECONDS if action=='buy' else int(cutoff),
             'self_trade_prevention_type':'taker_at_cross','cancel_order_on_pause':True,
-            'subaccount':0,'strategy':{'buy_min_cents':current.buy_min_cents,'sell_cents':current.sell_cents,'entry_window_seconds':current.entry_window_seconds,'entry_cutoff_seconds':current.entry_cutoff_seconds}}
+            'subaccount':0,'strategy':{'buy_min_cents':current.buy_min_cents,'sell_cents':current.sell_cents,'entry_window_seconds':current.entry_window_seconds,'entry_cutoff_seconds':current.entry_cutoff_seconds,'protective_exit':action=='sell'}}
 
 
 def affordable(cash_cents,price,fee_ceiling):

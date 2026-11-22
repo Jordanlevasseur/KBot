@@ -1,5 +1,10 @@
 # Kalshi Bitcoin Bot — desktop application
 
+**Protective execution changed:** the sell setting is a trigger. New protective
+exits use a marketable limit derived from the market's valid price grid to accept
+available bids below that trigger. Older fixed-limit descriptions below are
+historical. See [current behavior and deployment](docs/MARKETABLE_PROTECTION.md).
+
 **Missed-buy repair installed:** account preparation now retains confirmed closed
 fills and refreshes current risk independently, with verified gateway timing and
 bounded TLS reuse. [Diagnosis and verification](docs/MISSED_BUY_REPAIR.md).

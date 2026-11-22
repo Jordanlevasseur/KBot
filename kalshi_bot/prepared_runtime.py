@@ -145,6 +145,30 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
     last_volatility_calc=0.0
     last_volatility_sample=0.0
     volatility_values={'30s':None,'1m':None,'5m':None,'15m':None}
+    monitor.volatility_provider=lambda:dict(volatility_values)
+    from .entry_guard import entry_verdict,reference_evidence,EXIT_CUSHION
+    guard_evidence={}
+    def guard_market(ticker):
+        verified=inputs.view()['market']
+        return verified[0] if verified and verified[0].get('ticker')==ticker and time.monotonic()-verified[1]<=5 else None
+    def entry_guard(ticker,side):
+        nonlocal guard_evidence
+        verified=guard_market(ticker)
+        if ticker!=last_volatility_ticker:
+            return 'Entry blocked: volatility belongs to another market'
+        reason,guard_evidence=entry_verdict(verified,monitor.reference.snapshot() if monitor.reference else None,side,volatility)
+        return reason
+    engine.entry_guard=entry_guard
+    def research_event(kind,values):
+        payload=dict(values)
+        if kind in ('order_intent','order_ack','fill'):
+            if kind=='order_intent' and values.get('action')=='buy':payload['entry_approval']=dict(guard_evidence)
+            try:
+                payload['bitcoin_reference']=reference_evidence(guard_market(values.get('ticker')),
+                    monitor.reference.snapshot() if monitor.reference else None,values.get('side'))
+            except Exception:payload['bitcoin_reference']={'status':'unavailable'}
+        diagnostics.record(kind,payload)
+    journal.research_event=research_event
     try:
         emit('ready',mode=environment+'-trading',prepared_entry=True)
         monitor.start();readers.start()
@@ -172,15 +196,13 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
                 # apply/build may refresh a blocked state, but never precede a ready send.
                 # Use the exact validated quote already consumed by the
                 # dashboard, preventing a second stream read from diverging.
-                sampled_ticker,quote=monitor.display_snapshot()
+                sampled_ticker=market['ticker'] if market else None
+                quote=feed.frame(sampled_ticker).get('prices') if sampled_ticker else None
                 # Ignore late callbacks from a previous 15-minute market.
                 if market and sampled_ticker and sampled_ticker!=market['ticker']:
                     sampled_ticker=None; quote=None
-                if quote is None and market:
-                    # The monitor and sampler may run on adjacent scheduler
-                    # ticks. Read the same validated frame as the UI as a
-                    # race-free fallback, never an unvalidated cache.
-                    sampled_ticker=market['ticker']; quote=feed.frame(market['ticker']).get('prices')
+                # No display-cache fallback: missing or stale frames must stay
+                # missing instead of manufacturing valid volatility samples.
                 if sampled_ticker and sampled_ticker!=last_volatility_ticker:
                     volatility.reset(); last_volatility_sample=0.0; last_volatility_ticker=sampled_ticker
                 now_wall=time.time(); now_mono=time.monotonic()
@@ -197,11 +219,17 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
                     last_volatility_calc=now_mono
                 vol30=volatility_values['30s']; shock=volatility_values['1m']; vol5=volatility_values['5m']; avg_vol=volatility_values['15m']
                 held_now=journal.position();active_now=journal.active()
-                blocked=(avg_vol is not None and avg_vol>=policy().max_volatility_pct) or (vol5 is not None and vol5>=policy().max_volatility_5m_pct) or (shock is not None and shock>=policy().max_shock_1m_pct)
-                if journal.running and not held_now and not active_now and blocked:
-                    result={'status':f'Volatility blocked new buys (15m {avg_vol}; 5m {vol5}; 1m {shock})','ticker':market.get('ticker') if market else None,'volatility_avg_pct':avg_vol,'volatility_5m_pct':vol5,'volatility_1m_pct':shock}
-                else:
-                    result=engine.execute(market)
+                for (held_ticker,held_side),quantity in held_now.items():
+                    try:
+                        evidence=reference_evidence(guard_market(held_ticker),
+                            monitor.reference.snapshot() if monitor.reference else None,held_side)
+                        if D(evidence['held_side_cushion_usd'])<=EXIT_CUSHION:
+                            with journal.db:
+                                changed=journal.db.execute('UPDATE markets SET stop=1 WHERE ticker=? AND stop=0',(held_ticker,)).rowcount
+                            if changed:diagnostics.record('target_exit_trigger',evidence)
+                    except (ValueError,TypeError,RuntimeError,KeyError):
+                        pass # Existing price-based protective exits remain active.
+                result=engine.execute(market)
                 result['volatility_30s_pct']=vol30
                 result['volatility_5m_pct']=vol5
                 result['volatility_15m_pct']=avg_vol

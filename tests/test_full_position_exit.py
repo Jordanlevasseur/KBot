@@ -17,7 +17,7 @@ class FullPositionExitTests(unittest.TestCase):
         order=f.venue.sells()[-1]
         self.assertEqual(f.venue.actions[order['order_id']],('sell',f.side))
         self.assertEqual(D(order['initial_count_fp']),D(quantity))
-        self.assertEqual(D(order['yes_price_dollars']),D('.71') if f.side=='yes' else D('.29'))
+        self.assertEqual(D(order['yes_price_dollars']),D('.01') if f.side=='yes' else D('.99'))
         self.assertLessEqual(f.venue.max_live_sells,1)
         return order
 

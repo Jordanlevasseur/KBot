@@ -275,7 +275,7 @@ class Application:
         strategy_row.pack(fill='x',pady=(8,2))
         ttk.Label(strategy_row,text='Buy threshold (¢):',style='Strategy.TLabel').pack(side='left')
         ttk.Spinbox(strategy_row,from_=50,to=99,textvariable=self.buy_min,width=5,foreground='black').pack(side='left',padx=(6,16))
-        ttk.Label(strategy_row,text='Protective sell trigger/limit (¢):',style='Strategy.TLabel').pack(side='left')
+        ttk.Label(strategy_row,text='Protective sell trigger (¢):',style='Strategy.TLabel').pack(side='left')
         ttk.Spinbox(strategy_row,from_=1,to=98,textvariable=self.sell_stop,width=5,foreground='black').pack(side='left',padx=6)
         timing_row=ttk.Frame(rules)
         timing_row.pack(fill='x',pady=(6,2))
@@ -290,13 +290,13 @@ class Application:
         ttk.Entry(volatility_row,textvariable=self.max_volatility,width=7,foreground='black').pack(side='left',padx=6)
         ttk.Label(volatility_row,text='5m limit (%):',style='Strategy.TLabel').pack(side='left',padx=(14,0))
         ttk.Entry(volatility_row,textvariable=self.max_volatility_5m,width=7,foreground='black').pack(side='left',padx=6)
-        ttk.Label(volatility_row,text='1m shock (%):',style='Strategy.TLabel').pack(side='left',padx=(14,0))
+        ttk.Label(volatility_row,text='1m high–low shock (points):',style='Strategy.TLabel').pack(side='left',padx=(14,0))
         ttk.Entry(volatility_row,textvariable=self.max_shock_1m,width=7,foreground='black').pack(side='left',padx=6)
         save_row=ttk.Frame(rules)
         save_row.pack(fill='x',pady=(8,0))
         ttk.Button(save_row,text='Save settings',command=self.apply_strategy).pack(side='left')
         ttk.Label(rules,textvariable=self.strategy_status_ui,style='Muted.TLabel').pack(anchor='w',pady=(2,4))
-        ttk.Label(rules,text=f'Buy limits range from your threshold through 99¢. Entry: final {ENTRY_WINDOW_SECONDS//60} minutes; no new buys in the last {ENTRY_CUTOFF_SECONDS} seconds. A protective limit sell can remain unfilled if there are no buyers at that price.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(2,0))
+        ttk.Label(rules,text='Buy only with Bitcoin at least $50 beyond target on the bought side. Exit when that cushion reaches $35 or less, or the contract sell trigger is reached. Sell all remaining shares into available bids, including below the trigger. Fresh Bitcoin reference and volatility coverage required for buys.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(2,0))
         ttk.Label(rules,text='Whole contracts: available Bitcoin cash ÷ $2, rounded down. Fees are reserved separately; one position at a time.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(6,0))
         self.history=self.table_tab('Trade history',('time','id','market','action','side','quantity','price','fee','profit'),(200,65,195,65,50,65,75,65,115),
             hint='Net profit or loss for each BUY fill, including fees. Losses are negative. TIME is the confirmed fill date/time in your local timezone; unavailable times show —.')
@@ -465,7 +465,7 @@ class Application:
     def start(self):
         if self.switching or not self.power_ready or self.power_pause_pending or getattr(self,'strategy_saving',False): return
         if self.current_mode()=='production-trading' and self.worker.process:
-            if not messagebox.askyesno('Start REAL-MONEY trading?', f'This enables automated buys targeting floor(available Bitcoin cash in dollars / 2) whole contracts per buy. Buy threshold: {self.buy_min.get()}¢ (limits through 99¢); protective trigger/limit: {self.sell_stop.get()}¢. The sell limit may not fill. One position at a time. Buys stop 30 seconds before market close. Start live trading now?',parent=self.root): return
+            if not messagebox.askyesno('Start REAL-MONEY trading?', f'This enables automated buys targeting floor(available Bitcoin cash in dollars / 2) whole contracts per buy. Buy threshold: {self.buy_min.get()}¢ (limits through 99¢); protective trigger: {self.sell_stop.get()}¢. Once triggered, all remaining shares are offered into available bids, potentially far below the trigger. Execution requires buyers. One position at a time. Start live trading now?',parent=self.root): return
         if not self.worker.send('start'):
             self.connect()
             self.notice.set('Connect the worker, then press Start. No orders started automatically.')
@@ -478,7 +478,7 @@ class Application:
         if self.strategy_saving:return
         try:configured=StrategyPolicy(int(self.buy_min.get()),int(self.sell_stop.get()),int(self.entry_window.get()),int(self.entry_cutoff.get()),float(self.max_volatility.get()),float(self.max_volatility_5m.get()),float(self.max_shock_1m.get()))
         except (ValueError,TypeError):
-            messagebox.showerror('Invalid strategy','Enter whole cents: buy threshold 50–99¢ and protective sell trigger/limit below the buy threshold.',parent=self.root);return
+            messagebox.showerror('Invalid strategy','Enter whole cents: buy threshold 50–99¢ and protective sell trigger below the buy threshold.',parent=self.root);return
         if self.data.get('running') or self.data.get('position') or self.data.get('active_orders'):
             messagebox.showwarning('Strategy change blocked','Pause entries and resolve all open positions and orders before changing thresholds.',parent=self.root);return
         self.strategy_saving=True
@@ -500,7 +500,7 @@ class Application:
                 if not self.worker.send('strategy',buy_min_cents=configured.buy_min_cents,sell_cents=configured.sell_cents,entry_window_seconds=configured.entry_window_seconds,entry_cutoff_seconds=configured.entry_cutoff_seconds,max_volatility_pct=configured.max_volatility_pct,max_volatility_5m_pct=configured.max_volatility_5m_pct,max_shock_1m_pct=configured.max_shock_1m_pct):
                     self.strategy_status_ui.set('Saved for the next connection; the current worker did not accept the update.')
                 else:self.strategy_status_ui.set('Applying strategy in the connected worker…')
-            else:self.strategy_status_ui.set(f'Saved: buy from {configured.buy_min_cents}¢; protective trigger/limit {configured.sell_cents}¢.')
+            else:self.strategy_status_ui.set(f'Saved: buy from {configured.buy_min_cents}¢; protective trigger {configured.sell_cents}¢; exit at available bids.')
 
         self.background(persist,persisted)
 
