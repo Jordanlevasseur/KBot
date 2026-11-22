@@ -1,5 +1,12 @@
 # Target distance and volatility authorization
 
+Both dollar buffers are editable on the BITCOIN TARGET DISTANCE settings row,
+directly beneath volatility. Save settings persists `target_buy_usd` and
+`target_exit_usd`, sends them to a connected paused/flat worker, and forwards
+them on future launches. Old settings files default to $50/$35. The exit value
+must be positive and smaller than the entry value; decimal dollar values work.
+The numbers below describe the defaults, not unchangeable rules.
+
 New automatic entries require a fresh official BRTI value and the verified
 market's `floor_strike`. YES requires BRTI minus target >= $50. NO requires
 target minus BRTI >= $50. At exactly $50 entry is allowed; wrong-side prices

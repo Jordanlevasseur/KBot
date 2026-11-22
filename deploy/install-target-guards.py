@@ -10,7 +10,8 @@ import tempfile
 
 SOURCE=Path(__file__).resolve().parent.parent
 FILES=('core.py','desktop.py','execution.py','prepared.py','prepared_runtime.py',
-       'trade_api.py','trader.py','exit_price.py','entry_guard.py','market_data.py','decisions.py')
+       'trade_api.py','trader.py','exit_price.py','entry_guard.py','market_data.py','decisions.py',
+       'strategy.py','desktop_runtime.py','desktop_worker.py')
 
 
 def main():

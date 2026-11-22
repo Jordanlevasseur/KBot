@@ -83,8 +83,9 @@ def run_simulation(directory):
                         current=engine.status()
                         if current['account']['running'] or current['positions'] or current['active_orders']:
                             raise ValueError('Pause entries and close positions/orders before changing strategy')
-                        configured=set_policy(message.get('buy_min_cents'),message.get('sell_cents'),message.get('entry_window_seconds',240),message.get('entry_cutoff_seconds',30),message.get('max_volatility_pct',100),message.get('max_volatility_5m_pct',100),message.get('max_shock_1m_pct',100))
-                        emit('strategy',buy_min_cents=configured.buy_min_cents,sell_cents=configured.sell_cents,entry_window_seconds=configured.entry_window_seconds,entry_cutoff_seconds=configured.entry_cutoff_seconds)
+                        configured=set_policy(message.get('buy_min_cents'),message.get('sell_cents'),message.get('entry_window_seconds',240),message.get('entry_cutoff_seconds',30),message.get('max_volatility_pct',100),message.get('max_volatility_5m_pct',100),message.get('max_shock_1m_pct',100),message.get('target_buy_usd',50),message.get('target_exit_usd',35))
+                        from dataclasses import asdict
+                        emit('strategy',**asdict(configured))
                     elif command=='refresh': pass
                     elif command=='quit': alive=False
                     elif command=='speed' and message.get('value') in (1,5,15): clock.set_rate(message['value'])
@@ -326,10 +327,12 @@ def main():
     p.add_argument('--max-volatility-pct',type=float,default=100.0)
     p.add_argument('--max-volatility-5m-pct',type=float,default=100.0)
     p.add_argument('--max-shock-1m-pct',type=float,default=100.0)
+    p.add_argument('--target-buy-usd',type=float,default=50.0)
+    p.add_argument('--target-exit-usd',type=float,default=35.0)
     a=p.parse_args()
     try:
         from .strategy import set_policy
-        set_policy(a.buy_min_cents,a.sell_cents,a.entry_window_seconds,a.entry_cutoff_seconds,a.max_volatility_pct,a.max_volatility_5m_pct,a.max_shock_1m_pct)
+        set_policy(a.buy_min_cents,a.sell_cents,a.entry_window_seconds,a.entry_cutoff_seconds,a.max_volatility_pct,a.max_volatility_5m_pct,a.max_shock_1m_pct,a.target_buy_usd,a.target_exit_usd)
         check_isolation()
         resource.setrlimit(resource.RLIMIT_AS,(500*1024*1024,500*1024*1024))
         directory=Path('/state')

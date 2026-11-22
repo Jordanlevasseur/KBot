@@ -87,11 +87,12 @@ class Application:
             saved=StrategyPolicy(raw['buy_min_cents'],raw['sell_cents'],
                                  raw.get('entry_window_seconds',240),raw.get('entry_cutoff_seconds',30),
                                  raw.get('max_volatility_pct',100.0),raw.get('max_volatility_5m_pct',100.0),
-                                 raw.get('max_shock_1m_pct',100.0))
+                                 raw.get('max_shock_1m_pct',100.0),raw.get('target_buy_usd',50.0),raw.get('target_exit_usd',35.0))
             self.strategy_values={'buy_min_cents':saved.buy_min_cents,'sell_cents':saved.sell_cents,
                                   'entry_window_seconds':saved.entry_window_seconds,'entry_cutoff_seconds':saved.entry_cutoff_seconds,
                                   'max_volatility_pct':saved.max_volatility_pct,'max_volatility_5m_pct':saved.max_volatility_5m_pct,
-                                  'max_shock_1m_pct':saved.max_shock_1m_pct}
+                                  'max_shock_1m_pct':saved.max_shock_1m_pct,
+                                  'target_buy_usd':saved.target_buy_usd,'target_exit_usd':saved.target_exit_usd}
         except FileNotFoundError:pass
         except (OSError,ValueError,KeyError,TypeError):pass
         self.ui_jobs=queue.Queue()
@@ -138,6 +139,8 @@ class Application:
         self.max_volatility=tk.StringVar(value=str(self.strategy_values['max_volatility_pct']))
         self.max_volatility_5m=tk.StringVar(value=str(self.strategy_values.get('max_volatility_5m_pct',100.0)))
         self.max_shock_1m=tk.StringVar(value=str(self.strategy_values.get('max_shock_1m_pct',100.0)))
+        self.target_buy=tk.StringVar(value=str(self.strategy_values.get('target_buy_usd',50.0)))
+        self.target_exit=tk.StringVar(value=str(self.strategy_values.get('target_exit_usd',35.0)))
         self.strategy_status_ui=tk.StringVar(value='')
         self.prepared_status=tk.StringVar(value='')
         self.power_status=tk.StringVar(value='')
@@ -292,11 +295,18 @@ class Application:
         ttk.Entry(volatility_row,textvariable=self.max_volatility_5m,width=7,foreground='black').pack(side='left',padx=6)
         ttk.Label(volatility_row,text='1m high–low shock (points):',style='Strategy.TLabel').pack(side='left',padx=(14,0))
         ttk.Entry(volatility_row,textvariable=self.max_shock_1m,width=7,foreground='black').pack(side='left',padx=6)
+        target_row=ttk.Frame(rules)
+        target_row.pack(fill='x',pady=(6,2))
+        ttk.Label(target_row,text='BITCOIN TARGET DISTANCE',style='Strategy.TLabel').pack(side='left')
+        ttk.Label(target_row,text='Minimum buy cushion ($):',style='Strategy.TLabel').pack(side='left',padx=(18,0))
+        ttk.Entry(target_row,textvariable=self.target_buy,width=8,foreground='black').pack(side='left',padx=6)
+        ttk.Label(target_row,text='Exit at cushion ($) or less:',style='Strategy.TLabel').pack(side='left',padx=(14,0))
+        ttk.Entry(target_row,textvariable=self.target_exit,width=8,foreground='black').pack(side='left',padx=6)
         save_row=ttk.Frame(rules)
         save_row.pack(fill='x',pady=(8,0))
         ttk.Button(save_row,text='Save settings',command=self.apply_strategy).pack(side='left')
         ttk.Label(rules,textvariable=self.strategy_status_ui,style='Muted.TLabel').pack(anchor='w',pady=(2,4))
-        ttk.Label(rules,text='Buy only with Bitcoin at least $50 beyond target on the bought side. Exit when that cushion reaches $35 or less, or the contract sell trigger is reached. Sell all remaining shares into available bids, including below the trigger. Fresh Bitcoin reference and volatility coverage required for buys.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(2,0))
+        ttk.Label(rules,text='Target distances use Bitcoin dollars on the bought side. Exit when its cushion reaches your exit value or less, or the contract sell trigger is reached. Sell all remaining shares into available bids. Fresh Bitcoin reference and volatility coverage required for buys.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(2,0))
         ttk.Label(rules,text='Whole contracts: available Bitcoin cash ÷ $2, rounded down. Fees are reserved separately; one position at a time.',style='Muted.TLabel',wraplength=920).pack(anchor='w',pady=(6,0))
         self.history=self.table_tab('Trade history',('time','id','market','action','side','quantity','price','fee','profit'),(200,65,195,65,50,65,75,65,115),
             hint='Net profit or loss for each BUY fill, including fees. Losses are negative. TIME is the confirmed fill date/time in your local timezone; unavailable times show —.')
@@ -377,7 +387,7 @@ class Application:
             messagebox.showinfo('Connection service needed','Install the selected environment’s connection service in Account setup, then connect. No insecure network fallback is used.',parent=self.root)
             self.tabs.select(self.setup_tab)
             return
-        values=tuple(v.get() for v in (self.buy_min,self.sell_stop,self.entry_window,self.entry_cutoff,self.max_volatility,self.max_volatility_5m,self.max_shock_1m,self.fee))
+        values=tuple(v.get() for v in (self.buy_min,self.sell_stop,self.entry_window,self.entry_cutoff,self.max_volatility,self.max_volatility_5m,self.max_shock_1m,self.fee,self.target_buy,self.target_exit))
         credentials=self.credential_directory(mode)
         self.switching_mode=mode
         self.switching=True
@@ -397,9 +407,9 @@ class Application:
                     raise ValueError('Configurable-strategy gateway update required')
             directory=self.state_root/mode
             directory.mkdir(parents=True,exist_ok=True,mode=0o700)
-            strategy=StrategyPolicy(int(values[0]),int(values[1]),int(values[2]),int(values[3]),float(values[4]),float(values[5]),float(values[6]))
+            strategy=StrategyPolicy(int(values[0]),int(values[1]),int(values[2]),int(values[3]),float(values[4]),float(values[5]),float(values[6]),float(values[8]),float(values[9]))
             command=sandbox_command(ROOT,directory,mode,credentials if mode!='simulation' else None,preflight,values[7] or None,
-                                    strategy.buy_min_cents,strategy.sell_cents,strategy.entry_window_seconds,strategy.entry_cutoff_seconds,strategy.max_volatility_pct,strategy.max_volatility_5m_pct,strategy.max_shock_1m_pct)
+                                    strategy.buy_min_cents,strategy.sell_cents,strategy.entry_window_seconds,strategy.entry_cutoff_seconds,strategy.max_volatility_pct,strategy.max_volatility_5m_pct,strategy.max_shock_1m_pct,strategy.target_buy_usd,strategy.target_exit_usd)
             return command
         def prepared(result):
             self.switching=False
@@ -476,9 +486,9 @@ class Application:
 
     def apply_strategy(self):
         if self.strategy_saving:return
-        try:configured=StrategyPolicy(int(self.buy_min.get()),int(self.sell_stop.get()),int(self.entry_window.get()),int(self.entry_cutoff.get()),float(self.max_volatility.get()),float(self.max_volatility_5m.get()),float(self.max_shock_1m.get()))
+        try:configured=StrategyPolicy(int(self.buy_min.get()),int(self.sell_stop.get()),int(self.entry_window.get()),int(self.entry_cutoff.get()),float(self.max_volatility.get()),float(self.max_volatility_5m.get()),float(self.max_shock_1m.get()),float(self.target_buy.get()),float(self.target_exit.get()))
         except (ValueError,TypeError):
-            messagebox.showerror('Invalid strategy','Enter whole cents: buy threshold 50–99¢ and protective sell trigger below the buy threshold.',parent=self.root);return
+            messagebox.showerror('Invalid strategy','Use valid buy/sell cents and positive Bitcoin dollar buffers. The exit cushion must be smaller than the buy cushion.',parent=self.root);return
         if self.data.get('running') or self.data.get('position') or self.data.get('active_orders'):
             messagebox.showwarning('Strategy change blocked','Pause entries and resolve all open positions and orders before changing thresholds.',parent=self.root);return
         self.strategy_saving=True
@@ -487,7 +497,8 @@ class Application:
             temp=self.strategy_path.with_suffix('.json.new')
             fd=os.open(temp,os.O_WRONLY|os.O_CREAT|os.O_TRUNC|os.O_NOFOLLOW,0o600)
             with os.fdopen(fd,'w') as stream:
-                json.dump({'buy_min_cents':configured.buy_min_cents,'sell_cents':configured.sell_cents,'entry_window_seconds':configured.entry_window_seconds,'entry_cutoff_seconds':configured.entry_cutoff_seconds,'max_volatility_pct':configured.max_volatility_pct,'max_volatility_5m_pct':configured.max_volatility_5m_pct,'max_shock_1m_pct':configured.max_shock_1m_pct},stream)
+                from dataclasses import asdict
+                json.dump(asdict(configured),stream)
                 stream.flush();os.fsync(stream.fileno())
             os.replace(temp,self.strategy_path);os.chmod(self.strategy_path,0o600)
         def persisted(result):
@@ -495,9 +506,10 @@ class Application:
             if not result[0]:
                 messagebox.showerror('Could not save strategy','The private local settings file could not be updated.',parent=self.root)
                 return
-            self.strategy_values={'buy_min_cents':configured.buy_min_cents,'sell_cents':configured.sell_cents,'entry_window_seconds':configured.entry_window_seconds,'entry_cutoff_seconds':configured.entry_cutoff_seconds,'max_volatility_pct':configured.max_volatility_pct,'max_volatility_5m_pct':configured.max_volatility_5m_pct,'max_shock_1m_pct':configured.max_shock_1m_pct}
+            from dataclasses import asdict
+            self.strategy_values=asdict(configured)
             if self.worker.process:
-                if not self.worker.send('strategy',buy_min_cents=configured.buy_min_cents,sell_cents=configured.sell_cents,entry_window_seconds=configured.entry_window_seconds,entry_cutoff_seconds=configured.entry_cutoff_seconds,max_volatility_pct=configured.max_volatility_pct,max_volatility_5m_pct=configured.max_volatility_5m_pct,max_shock_1m_pct=configured.max_shock_1m_pct):
+                if not self.worker.send('strategy',**asdict(configured)):
                     self.strategy_status_ui.set('Saved for the next connection; the current worker did not accept the update.')
                 else:self.strategy_status_ui.set('Applying strategy in the connected worker…')
             else:self.strategy_status_ui.set(f'Saved: buy from {configured.buy_min_cents}¢; protective trigger {configured.sell_cents}¢; exit at available bids.')
@@ -875,7 +887,7 @@ class Application:
             elif kind=='state': self.update_state(message['state'])
             elif kind=='strategy':
                 self.data['buy_min_cents']=message['buy_min_cents'];self.data['sell_cents']=message['sell_cents']
-                self.strategy_status_ui.set(f"Active: buy from {message['buy_min_cents']}¢; sell {message['sell_cents']}¢; entry starts {message['entry_window_seconds']}s before close; blocks final {message['entry_cutoff_seconds']}s.")
+                self.strategy_status_ui.set(f"Active: buy from {message['buy_min_cents']}¢; sell trigger {message['sell_cents']}¢; entry starts {message['entry_window_seconds']}s before close; blocks final {message['entry_cutoff_seconds']}s. Target buy ${message.get('target_buy_usd',50):g}; exit ${message.get('target_exit_usd',35):g}.")
             elif kind=='strategy-error':
                 self.strategy_status_ui.set('Strategy update rejected: '+message.get('message','worker state changed'))
             elif kind=='profit-ready':

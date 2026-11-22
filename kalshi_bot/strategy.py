@@ -1,6 +1,7 @@
 """Shared strategy policy and timing/sizing rules."""
 from dataclasses import dataclass
 from collections import deque
+import math
 
 ENTRY_WINDOW_SECONDS=240
 ENTRY_CUTOFF_SECONDS=30
@@ -15,8 +16,13 @@ class StrategyPolicy:
     max_volatility_pct:float=100.0
     max_volatility_5m_pct:float=100.0
     max_shock_1m_pct:float=100.0
+    target_buy_usd:float=50.0
+    target_exit_usd:float=35.0
 
     def __post_init__(self):
+        if (any(type(v) not in (int,float) or not math.isfinite(v) for v in (self.target_buy_usd,self.target_exit_usd))
+                or not 0<self.target_exit_usd<self.target_buy_usd):
+            raise ValueError('Bitcoin target buffers must be positive dollars, with exit below buy')
         if type(self.buy_min_cents) is not int or not 50<=self.buy_min_cents<=99:
             raise ValueError('Buy threshold must be a whole cent from 50 to 99')
         if type(self.sell_cents) is not int or not 1<=self.sell_cents<self.buy_min_cents:
@@ -40,9 +46,9 @@ def policy():
     return _POLICY
 
 
-def set_policy(buy_min_cents,sell_cents,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0):
+def set_policy(buy_min_cents,sell_cents,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0,target_buy_usd=50.0,target_exit_usd=35.0):
     global _POLICY,ENTRY_WINDOW_SECONDS,ENTRY_CUTOFF_SECONDS
-    _POLICY=StrategyPolicy(buy_min_cents,sell_cents,entry_window_seconds,entry_cutoff_seconds,float(max_volatility_pct),float(max_volatility_5m_pct),float(max_shock_1m_pct))
+    _POLICY=StrategyPolicy(buy_min_cents,sell_cents,entry_window_seconds,entry_cutoff_seconds,float(max_volatility_pct),float(max_volatility_5m_pct),float(max_shock_1m_pct),float(target_buy_usd),float(target_exit_usd))
     ENTRY_WINDOW_SECONDS=_POLICY.entry_window_seconds
     ENTRY_CUTOFF_SECONDS=_POLICY.entry_cutoff_seconds
     return _POLICY

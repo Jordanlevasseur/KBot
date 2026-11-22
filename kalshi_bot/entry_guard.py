@@ -27,8 +27,8 @@ def reference_evidence(market,reference,side,*,wall=None,mono=None):
     return {'ticker':market['ticker'],'side':side,'btc_target':str(target),
             'btc_reference':str(value),'reference_source_ms':stamp,
             'reference_age_seconds':wall-stamp/1000,'target_difference_usd':str(difference),
-            'held_side_cushion_usd':str(cushion),'buy_cushion_usd':str(BUY_CUSHION),
-            'exit_cushion_usd':str(EXIT_CUSHION)}
+            'held_side_cushion_usd':str(cushion),'buy_cushion_usd':str(policy().target_buy_usd),
+            'exit_cushion_usd':str(policy().target_exit_usd)}
 
 
 def entry_verdict(market,reference,side,tracker,*,wall=None,mono=None):
@@ -37,8 +37,8 @@ def entry_verdict(market,reference,side,tracker,*,wall=None,mono=None):
     try:evidence=reference_evidence(market,reference,side,wall=wall,mono=mono)
     except (SchemaError,ValueError,TypeError,KeyError):
         return 'Fresh Bitcoin reference and target required',{}
-    if D(evidence['held_side_cushion_usd'])<BUY_CUSHION:
-        return 'Entry blocked: Bitcoin must be at least $50 beyond target on the bought side',evidence
+    if D(evidence['held_side_cushion_usd'])<D(str(policy().target_buy_usd)):
+        return f'Entry blocked: Bitcoin must be at least ${policy().target_buy_usd:g} beyond target on the bought side',evidence
     recent=[(t,v) for t,v in tracker.samples if wall-60<=t<=wall]
     # Missing/one-sided books never count as zero volatility or sufficient coverage.
     distinct={int(t) for t,_ in recent}

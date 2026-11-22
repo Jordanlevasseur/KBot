@@ -123,10 +123,11 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
                 try:
                     if journal.running or journal.position() or journal.active() or not journal.ready:
                         raise ValueError('Pause entries and wait for a confirmed flat account before changing strategy')
-                    configured=set_policy(command.get('buy_min_cents'),command.get('sell_cents'),command.get('entry_window_seconds',240),command.get('entry_cutoff_seconds',30),command.get('max_volatility_pct',100),command.get('max_volatility_5m_pct',100),command.get('max_shock_1m_pct',100))
+                    configured=set_policy(command.get('buy_min_cents'),command.get('sell_cents'),command.get('entry_window_seconds',240),command.get('entry_cutoff_seconds',30),command.get('max_volatility_pct',100),command.get('max_volatility_5m_pct',100),command.get('max_shock_1m_pct',100),command.get('target_buy_usd',50),command.get('target_exit_usd',35))
                     engine.plans={};engine.sell=None;engine.revision=-1
                     inputs.invalidate('Strategy changed; rebuilding prepared orders')
-                    emit('strategy',buy_min_cents=configured.buy_min_cents,sell_cents=configured.sell_cents,entry_window_seconds=configured.entry_window_seconds,entry_cutoff_seconds=configured.entry_cutoff_seconds,max_volatility_pct=configured.max_volatility_pct)
+                    from dataclasses import asdict
+                    emit('strategy',**asdict(configured))
                 except (ValueError,TypeError) as exc:
                     emit('strategy-error',message=str(exc))
             monitor.set_execution(journal.running,'Entries '+('enabled' if journal.running else 'paused'))
@@ -146,7 +147,7 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
     last_volatility_sample=0.0
     volatility_values={'30s':None,'1m':None,'5m':None,'15m':None}
     monitor.volatility_provider=lambda:dict(volatility_values)
-    from .entry_guard import entry_verdict,reference_evidence,EXIT_CUSHION
+    from .entry_guard import entry_verdict,reference_evidence
     guard_evidence={}
     def guard_market(ticker):
         verified=inputs.view()['market']
@@ -223,7 +224,7 @@ def run(directory,fee_reserve,environment,authorize_live,emit):
                     try:
                         evidence=reference_evidence(guard_market(held_ticker),
                             monitor.reference.snapshot() if monitor.reference else None,held_side)
-                        if D(evidence['held_side_cushion_usd'])<=EXIT_CUSHION:
+                        if D(evidence['held_side_cushion_usd'])<=D(str(policy().target_exit_usd)):
                             with journal.db:
                                 changed=journal.db.execute('UPDATE markets SET stop=1 WHERE ticker=? AND stop=0',(held_ticker,)).rowcount
                             if changed:diagnostics.record('target_exit_trigger',evidence)

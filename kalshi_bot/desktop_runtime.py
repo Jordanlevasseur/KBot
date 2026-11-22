@@ -30,7 +30,7 @@ def paths():
     return state,config
 
 
-def sandbox_command(root,state,mode,credentials=None,preflight=False,fee_reserve=None,buy_min_cents=96,sell_cents=92,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0):
+def sandbox_command(root,state,mode,credentials=None,preflight=False,fee_reserve=None,buy_min_cents=96,sell_cents=92,entry_window_seconds=240,entry_cutoff_seconds=30,max_volatility_pct=100.0,max_volatility_5m_pct=100.0,max_shock_1m_pct=100.0,target_buy_usd=50.0,target_exit_usd=35.0):
     if mode not in MODES: raise ValueError('Unsupported desktop mode')
     root=Path(root).resolve()
     state=Path(state).resolve()
@@ -55,6 +55,7 @@ def sandbox_command(root,state,mode,credentials=None,preflight=False,fee_reserve
     if mode.endswith('-trading'):command+=['--setenv','MALLOC_ARENA_MAX','2']
     command+=['/usr/bin/python3','-B','-m','kalshi_bot.desktop_worker','--mode',mode]
     command+=['--buy-min-cents',str(buy_min_cents),'--sell-cents',str(sell_cents),'--entry-window-seconds',str(entry_window_seconds),'--entry-cutoff-seconds',str(entry_cutoff_seconds),'--max-volatility-pct',str(max_volatility_pct),'--max-volatility-5m-pct',str(max_volatility_5m_pct),'--max-shock-1m-pct',str(max_shock_1m_pct)]
+    command+=['--target-buy-usd',str(target_buy_usd),'--target-exit-usd',str(target_exit_usd)]
     if mode.endswith('-trading') and not preflight and fee_reserve is not None:
         from decimal import Decimal
         fee=Decimal(str(fee_reserve))

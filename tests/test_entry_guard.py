@@ -27,6 +27,18 @@ class EntryGuardTests(unittest.TestCase):
             old=self.reference[key];self.reference[key]=value
             self.assertIsNotNone(self.verdict()[0]);self.reference[key]=old
         self.market.pop('floor_strike');self.assertIsNotNone(self.verdict()[0])
+    def test_custom_dollar_buffers_apply_to_both_sides_and_evidence(self):
+        set_policy(95,89,target_buy_usd=75.5,target_exit_usd=40.25)
+        for side,price in [('yes','60075.5'),('no','59924.5')]:
+            self.reference['value']=price
+            reason,evidence=self.verdict(side)
+            self.assertIsNone(reason)
+            self.assertEqual(D(evidence['buy_cushion_usd']),D('75.5'))
+            self.assertEqual(D(evidence['exit_cushion_usd']),D('40.25'))
+        self.reference['value']='60075.49';self.assertIsNotNone(self.verdict()[0])
+    def test_invalid_target_settings_rejected(self):
+        for buy,exit in [(35,35),(20,35),(0,0),(50,-1),(float('nan'),20),(50,float('inf'))]:
+            with self.assertRaises(ValueError):set_policy(95,89,target_buy_usd=buy,target_exit_usd=exit)
     def test_missing_sparse_or_stale_volatility_blocks(self):
         for points in [[],[(999,.97)],[(x,.97) for x in range(940,990)]]:
             self.tracker.samples.clear();self.tracker.samples.extend(points)
