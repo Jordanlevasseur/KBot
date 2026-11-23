@@ -71,7 +71,16 @@ class MissingOrderVerifier:
         now = self.clock()
         remote = {r.get('client_order_id') for r in account_orders}
         requested = []
-        for r in journal.db.execute("SELECT client_id,exchange_id,ticker,cutoff,status,filled FROM orders WHERE status='canceled'"):
+        for r in journal.db.execute("""SELECT o.client_id,o.exchange_id,o.ticker,
+                    o.cutoff,o.status,o.filled
+                FROM orders o
+                WHERE o.status='canceled' AND NOT EXISTS (
+                    SELECT 1 FROM historical_order_verifications h
+                    WHERE h.client_id=o.client_id
+                      AND h.exchange_id=o.exchange_id
+                      AND h.ticker=o.ticker
+                      AND h.evidence='settled_zero_fill'
+                )"""):
             if (r['client_id'] not in remote and r['exchange_id']
                     and D(r['filled']) == 0
                     and now > float(r['cutoff']) + 86400):

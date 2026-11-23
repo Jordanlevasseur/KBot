@@ -90,6 +90,24 @@ class Journal:
         ''')
         if 'intent_at' not in {r[1] for r in self.db.execute('PRAGMA table_info(orders)')}:
             self.db.execute('ALTER TABLE orders ADD COLUMN intent_at REAL NOT NULL DEFAULT 0')
+        # A live-update bridge may temporarily classify already proven,
+        # canceled zero-fill orders as rejected so an older running process
+        # can stop re-verifying them. Once this fixed Journal starts, restore
+        # their accurate exchange status and let durable verification handle
+        # them permanently.
+        bridge=self.db.execute("""SELECT 1 FROM sqlite_master
+            WHERE type='table' AND name='reconciliation_status_migrations'""").fetchone()
+        if bridge:
+            with self.db:
+                restored=self.db.execute("""UPDATE orders SET status=(
+                        SELECT original_status FROM reconciliation_status_migrations m
+                        WHERE m.client_id=orders.client_id)
+                    WHERE status='rejected' AND client_id IN (
+                        SELECT client_id FROM reconciliation_status_migrations)""").rowcount
+                if restored:
+                    self.db.execute('INSERT INTO audit(at,event) VALUES(?,?)',
+                        (time.time(),f'Restored {restored} durable zero-fill order statuses after live reconciliation repair'))
+                self.db.execute('DROP TABLE reconciliation_status_migrations')
         saved=self.db.execute('SELECT value FROM identity').fetchone()
         if saved and saved[0]!=identity:
             self.close()
@@ -150,6 +168,16 @@ class Journal:
         self.ready=False
         indexed={o['client_order_id']:o for o in orders if o.get('client_order_id')}
         proofs=missing_proofs or {}
+        # A finalized market and a zero-fill order are immutable facts. Reuse
+        # only the exact durable proof previously produced by
+        # verified_missing_order(). Fresh account positions, fills and open
+        # orders are still reconciled below on every cycle.
+        durable_missing={
+            (r['client_id'],r['exchange_id'],r['ticker'])
+            for r in self.db.execute("""SELECT client_id,exchange_id,ticker
+                FROM historical_order_verifications
+                WHERE evidence='settled_zero_fill'""")
+        }
         verified=[]
         prior_changes=self.db.total_changes
         with self.db:
@@ -167,6 +195,11 @@ class Journal:
                                      'direct' if remote else 'settled_zero_fill'))
                     if not remote:
                         continue
+                if (not remote and row['status']=='canceled' and D(row['filled'])==0
+                        and row['exchange_id']
+                        and time.time()>float(row['cutoff'])+86400
+                        and (row['client_id'],row['exchange_id'],row['ticker']) in durable_missing):
+                    continue
                 if not remote:
                     raise RuntimeError(
     'Known order absent: ' + str(row['client_id']) +

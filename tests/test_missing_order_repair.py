@@ -35,6 +35,10 @@ class MissingOrderTests(unittest.TestCase):
             self.assertEqual(returned[SELL],proof);submit.assert_called_once()
             self.reconcile(proof=returned[SELL])
             self.assertTrue(self.j.ready)
+            # This test exercises the in-memory renewal lifecycle itself. A
+            # durable proof intentionally bypasses future renewal work.
+            with self.j.db:
+                self.j.db.execute('DELETE FROM historical_order_verifications')
             pending.set_exception(APIError(0))
             self.assertEqual(verifier.proofs(self.j,[self.buy])[SELL],proof)
             now[0]+=300
@@ -102,6 +106,53 @@ class MissingOrderTests(unittest.TestCase):
         self.assertEqual(self.j.position(),{})
         row=self.j.db.execute('SELECT evidence FROM historical_order_verifications').fetchone()
         self.assertEqual(row[0],'settled_zero_fill')
+
+    def test_durable_settled_zero_fill_is_reused_after_restart(self):
+        self.reconcile()
+        self.j.close()
+        self.j=Journal(Path(self.tmp.name)/'journal.sqlite3','test-only')
+        self.j.reconcile([self.buy],[self.fill],[],[self.outcome])
+        self.assertTrue(self.j.ready)
+        self.assertEqual(self.j.position(),{})
+
+    def test_durable_proof_requires_exact_exchange_and_market_identity(self):
+        self.reconcile()
+        with self.j.db:
+            self.j.db.execute("UPDATE historical_order_verifications SET exchange_id='wrong'")
+        with self.assertRaisesRegex(RuntimeError,'Known order absent'):
+            self.j.reconcile([self.buy],[self.fill],[],[self.outcome])
+
+    def test_durable_proof_does_not_hide_a_new_current_fill(self):
+        self.reconcile()
+        late={'fill_id':'late-current','order_id':SELL_EID,'ticker':TICKER,
+              'count_fp':'1','yes_price_dollars':'.86','no_price_dollars':'.14',
+              'fee_cost':'0','outcome_side':'no','book_side':'ask'}
+        with self.assertRaisesRegex(RuntimeError,'Fill feed incomplete'):
+            self.j.reconcile([self.buy],[self.fill,late],[],[self.outcome])
+
+    def test_verifier_does_not_recheck_durable_settled_zero_fill(self):
+        self.reconcile()
+        verifier=MissingOrderVerifier(Mock())
+        self.addCleanup(verifier.close)
+        self.assertEqual(verifier.proofs(self.j,[self.buy]),{})
+        self.assertEqual(verifier.jobs,{})
+
+    def test_live_bridge_status_is_restored_on_fixed_journal_restart(self):
+        self.reconcile()
+        with self.j.db:
+            self.j.db.execute('''CREATE TABLE reconciliation_status_migrations(
+                client_id TEXT PRIMARY KEY,original_status TEXT NOT NULL,
+                migrated_at REAL NOT NULL,reason TEXT NOT NULL)''')
+            self.j.db.execute('INSERT INTO reconciliation_status_migrations VALUES(?,?,?,?)',
+                              (SELL,'canceled',time.time(),'test bridge'))
+            self.j.db.execute("UPDATE orders SET status='rejected' WHERE client_id=?",(SELL,))
+        self.j.close()
+        self.j=Journal(Path(self.tmp.name)/'journal.sqlite3','test-only')
+        self.assertEqual(self.j.db.execute(
+            'SELECT status FROM orders WHERE client_id=?',(SELL,)).fetchone()[0],'canceled')
+        self.assertFalse(self.j.db.execute("SELECT 1 FROM sqlite_master WHERE name='reconciliation_status_migrations'").fetchone())
+        self.j.reconcile([self.buy],[self.fill],[],[self.outcome])
+        self.assertTrue(self.j.ready)
 
     def test_missing_proof_is_not_accepted(self):
         with self.assertRaisesRegex(RuntimeError,'Known order absent'):
